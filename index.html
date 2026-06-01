@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico de Equipo — CenterPoint</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--bg2:#f7f7f5;--bg3:#ebebeb;--t1:#111;--t2:#5f6368;--t3:#9aa0a6;--b1:rgba(0,0,0,.10);--b2:rgba(0,0,0,.20);--r:8px;--rl:12px}
+@media(prefers-color-scheme:dark){:root{--bg:#1c1c1e;--bg2:#2c2c2e;--bg3:#3a3a3c;--t1:#f0f0f0;--t2:#aeaeb2;--t3:#6e6e73;--b1:rgba(255,255,255,.10);--b2:rgba(255,255,255,.20)}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t1);padding:20px 16px 32px;font-size:14px;line-height:1.5;max-width:640px;margin:0 auto}
+.screen{display:none;animation:fi .18s ease}
+.screen.on{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.prog-wrap{height:3px;background:var(--bg3);border-radius:2px;margin-bottom:24px}
+.prog-fill{height:100%;border-radius:2px;transition:width .3s ease}
+.q-meta{font-size:10.5px;font-weight:500;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.q-dim-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500}
+.q-text{font-size:16px;line-height:1.65;color:var(--t1);margin-bottom:28px;min-height:52px}
+.scale-ends{display:flex;justify-content:space-between;font-size:10.5px;color:var(--t3);margin-bottom:8px}
+.scale-btns{display:flex;gap:7px}
+.sbtn{flex:1;padding:12px 4px;border-radius:var(--r);border:1px solid var(--b1);cursor:pointer;font-family:inherit;font-size:14px;font-weight:500;background:var(--bg2);color:var(--t2);transition:all .1s;text-align:center}
+.sbtn:hover{border-color:var(--b2);color:var(--t1);background:var(--bg)}
+.sbtn.picked{color:#fff!important;border-color:transparent!important}
+.intro-logo{font-size:13px;font-weight:500;letter-spacing:.03em;color:var(--t3);margin-bottom:24px}
+.intro-title{font-size:22px;font-weight:500;color:var(--t1);margin-bottom:8px}
+.intro-sub{font-size:13.5px;color:var(--t2);line-height:1.7;margin-bottom:20px}
+.intro-note{font-size:12px;color:var(--t3);background:var(--bg2);border-radius:var(--r);padding:11px 14px;line-height:1.65;margin-bottom:20px}
+.field-group{margin-bottom:14px}
+.field-label{font-size:11.5px;font-weight:500;color:var(--t2);margin-bottom:5px}
+.field-input{width:100%;padding:10px 14px;border-radius:var(--r);border:1px solid var(--b1);font-family:inherit;font-size:13.5px;background:var(--bg2);color:var(--t1);outline:none;transition:border-color .12s}
+.field-input:focus{border-color:var(--b2)}
+.start-btn{width:100%;padding:13px;border-radius:var(--r);border:none;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;color:#fff;transition:opacity .15s;margin-top:6px}
+.start-btn:hover{opacity:.86}
+.card{background:var(--bg);border:0.5px solid var(--b1);border-radius:var(--rl);padding:14px 16px;margin-bottom:12px}
+.card-title{font-size:10.5px;font-weight:500;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
+.res-badge{display:inline-block;padding:4px 14px;border-radius:16px;font-size:11px;font-weight:500;margin-bottom:10px}
+.res-name{font-size:22px;font-weight:500;color:var(--t1);margin-bottom:3px}
+.res-sub{font-size:13px;color:var(--t2);margin-bottom:10px}
+.res-insight{font-size:13px;color:var(--t2);line-height:1.7;padding:11px 14px;background:var(--bg2);border-radius:var(--r);margin-bottom:18px}
+.dim-row{margin-bottom:11px}
+.dim-row:last-child{margin-bottom:0}
+.dim-hd{display:flex;justify-content:space-between;margin-bottom:4px}
+.dim-lbl{font-size:12px;font-weight:500;color:var(--t1)}
+.dim-sc{font-size:12px;color:var(--t2)}
+.dim-bg{height:7px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.dim-fill{height:100%;border-radius:4px;transition:width .7s ease}
+.blocker-card{border-radius:var(--rl);padding:14px 16px;margin-bottom:12px;border-left:4px solid}
+.blocker-label{font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.blocker-text{font-size:12.5px;line-height:1.65}
+.rec-item{padding:10px 0;border-bottom:0.5px solid var(--b1);font-size:12.5px;line-height:1.6;color:var(--t1);display:flex;gap:9px;align-items:flex-start}
+.rec-item:last-child{border-bottom:none}
+.rec-tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.btn-row{display:flex;gap:8px;margin-top:4px}
+.cta-btn{flex:1;padding:13px;border-radius:var(--r);border:none;font-family:inherit;font-size:13.5px;font-weight:500;cursor:pointer;color:#fff;transition:opacity .15s}
+.cta-btn:hover{opacity:.86}
+.pdf-btn{flex:1;padding:13px;border-radius:var(--r);border:1px solid var(--b1);font-family:inherit;font-size:13.5px;font-weight:500;cursor:pointer;background:var(--bg2);color:var(--t1);transition:all .12s}
+.pdf-btn:hover{border-color:var(--b2);background:var(--bg)}
+.pdf-btn.loading{opacity:.5;cursor:wait}
+.restart-btn{width:100%;padding:10px;border-radius:var(--r);border:0.5px solid var(--b1);font-family:inherit;font-size:13px;font-weight:400;cursor:pointer;background:transparent;color:var(--t2);margin-top:8px;transition:all .12s}
+.restart-btn:hover{border-color:var(--b2);color:var(--t1)}
+.footer{font-size:11px;color:var(--t3);text-align:center;margin-top:20px;letter-spacing:.02em}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const Qs=[
+  {q:"En este equipo, es seguro admitir que cometiste un error o que no sabes cómo resolver algo.",dim:"trust"},
+  {q:"Los miembros del equipo se muestran como son realmente, sin necesidad de aparentar.",dim:"trust"},
+  {q:"Cuando hay desacuerdos o tensiones, los abordamos de forma directa, sin rodeos.",dim:"conflict"},
+  {q:"Los conflictos en nuestro equipo terminan siendo productivos — no nos dejan heridas.",dim:"conflict"},
+  {q:"Todos en el equipo tenemos claro cuáles son las prioridades y qué se espera de cada uno.",dim:"clarity"},
+  {q:"Está claro quién tiene autoridad para decidir qué — no hay confusión sobre roles.",dim:"clarity"},
+  {q:"Tenemos formas de trabajar juntos que todos conocen y respetan.",dim:"cohesion"},
+  {q:"Me siento genuinamente parte de este equipo — no solo un rol dentro de él.",dim:"cohesion"},
+  {q:"Puedo expresar una idea o preocupación aunque sea diferente a lo que piensa el líder.",dim:"psafety"},
+  {q:"En este equipo, señalar un problema es valorado — no visto como negatividad.",dim:"psafety"},
+  {q:"Las personas cumplen sus compromisos entre ellas — no solo hacia el líder.",dim:"impact"},
+  {q:"Nuestro equipo comparte activamente lo que aprende con otros equipos de la organización.",dim:"impact"}
+];
+const DIMS={
+  trust:{label:"Confianza",color:"#14A0B4",bg:"#E3F5F8"},
+  conflict:{label:"Gestión del conflicto",color:"#993C1D",bg:"#FAECE7"},
+  clarity:{label:"Claridad",color:"#854F0B",bg:"#FAEEDA"},
+  cohesion:{label:"Cohesión",color:"#64B450",bg:"#EBF5E6"},
+  psafety:{label:"Seguridad psicológica",color:"#534AB7",bg:"#E5E3FC"},
+  impact:{label:"Impacto colectivo",color:"#888780",bg:"#F1EFE8"}
+};
+const BLOCKERS={
+  trust:"La confianza es la base de todo. Sin ella, el conflicto se evita, los compromisos son superficiales y la seguridad psicológica es imposible. Este es el punto de palanca más crítico ahora mismo.",
+  conflict:"Tu equipo evita el conflicto o no lo maneja bien. Eso crea tensiones que van 'underground' y corroen la colaboración sin que nadie lo nombre directamente.",
+  clarity:"Hay ambigüedad en objetivos o roles. Cuando todos tienen una versión distinta de 'a dónde vamos' o 'quién decide qué', la energía del equipo se fragmenta.",
+  cohesion:"El equipo no ha desarrollado normas sólidas ni identidad colectiva. Funciona como grupo de individuos más que como equipo con personalidad propia.",
+  psafety:"Las personas no se sienten seguras expresando ideas, errores o preocupaciones libremente. Eso limita la innovación, el aprendizaje colectivo y la confianza profunda.",
+  impact:"El equipo funciona bien internamente pero no ha desarrollado accountability mutuo ni orientación hacia afuera. Eso limita su influencia organizacional."
+};
+const STAGES=[
+  {name:"Forming",sub:"Conexión antes que contenido",ac:"#888780",al:"#F1EFE8",ad:"#2C2C2A",
+   insight:"Tu equipo está en construcción inicial. La prioridad no es la productividad máxima sino la conexión y la claridad de propósito.",
+   recs:[
+     {tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Taller de team charter: propósito compartido, expectativas mutuas y acuerdos de trabajo desde cero."},
+     {tag:"Assessment",tc:"#14A0B4",tb:"#E3F5F8",text:"Momento ideal para DiSC o StrengthsFinder individual — sin historial ni comparación previa."},
+     {tag:"Experiencia",tc:"#854F0B",tb:"#FAEEDA",text:"Reto colaborativo de bajo riesgo emocional para construir contexto compartido antes que confianza profunda."}
+   ]},
+  {name:"Storming",sub:"Estructura antes que armonía",ac:"#993C1D",al:"#FAECE7",ad:"#4A1B0C",
+   insight:"Tu equipo está en tensión activa. Esto es normal — pero necesita ser nombrado y trabajado, no ignorado con actividades recreativas.",
+   recs:[
+     {tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Taller de estilos de conflicto (Thomas-Kilmann): dar lenguaje neutro al conflicto cambia la dinámica."},
+     {tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Renegociar acuerdos de trabajo. Muchos conflictos en Storming son síntoma de normas no establecidas."},
+     {tag:"Precaución",tc:"#993C1D",tb:"#FAECE7",text:"Evita actividades puramente recreativas ahora — el equipo las vive como distracción del conflicto real."}
+   ]},
+  {name:"Norming",sub:"Sistemas que sostienen la confianza",ac:"#854F0B",al:"#FEF3E2",ad:"#412402",
+   insight:"Tu equipo se está estabilizando. Los avances son reales pero frágiles si no se codifican en normas y rituales explícitos.",
+   recs:[
+     {tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Taller de normas y rituales: documentar 'cómo trabajamos', procesos de decisión y protocolos de comunicación."},
+     {tag:"Assessment",tc:"#534AB7",tb:"#E5E3FC",text:"Team health check (Lencioni) o DiSC/StrengthsFinder colectivo para ver cómo se complementan los estilos."},
+     {tag:"Experiencia",tc:"#854F0B",tb:"#FAEEDA",text:"Reto de mediana complejidad que refuerce la identidad colectiva: innovación interna, reto social o experiencia con roles."}
+   ]},
+  {name:"Performing",sub:"Reto antes que comodidad",ac:"#64B450",al:"#E1F5EE",ad:"#4A8A39",
+   insight:"Tu equipo ejecuta bien. El siguiente paso es expandir hacia seguridad psicológica real y comenzar a servir a otros.",
+   recs:[
+     {tag:"Sesión de trabajo",tc:"#534AB7",tb:"#E5E3FC",text:"Feedback 360° y retrospectiva profunda: revisar patrones del equipo, no solo resultados de productividad."},
+     {tag:"Experiencia",tc:"#854F0B",tb:"#FAEEDA",text:"Reto de alta complejidad con debriefing: hackathon, design sprint o simulación de crisis."},
+     {tag:"Multiplicador",tc:"#534AB7",tb:"#E5E3FC",text:"Primeros pasos de servicio: mentoring a equipos más jóvenes o proyectos cross-funcionales."}
+   ]},
+  {name:"High Performing",sub:"Psychological safety como marcador clave",ac:"#14A0B4",al:"#E6F1FB",ad:"#0C7A8A",
+   insight:"Tu equipo ha alcanzado confianza y seguridad psicológica reales. El foco es sostenerlo y expandir su impacto organizacional.",
+   recs:[
+     {tag:"Sesión de trabajo",tc:"#534AB7",tb:"#E5E3FC",text:"Auditoría de seguridad psicológica (Edmondson Scale) para identificar zonas de autocensura o asimetría."},
+     {tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Sesión de visión de legado: '¿qué queremos que digan de este equipo en 3 años?' Future-back visioning."},
+     {tag:"Multiplicador",tc:"#534AB7",tb:"#E5E3FC",text:"Diseñar cómo este equipo puede ser recurso para otros: comunidad de práctica, mentoring, exportar sus normas."}
+   ]},
+  {name:"Generative",sub:"Equipos que multiplican impacto hacia afuera",ac:"#534AB7",al:"#EEEDFE",ad:"#26215C",
+   insight:"Tu equipo opera más allá de sí mismo. El trabajo ahora es institucionalizar esa generatividad para que sobreviva cambios y rotaciones.",
+   recs:[
+     {tag:"Multiplicador",tc:"#534AB7",tb:"#E5E3FC",text:"Formalizar el rol multiplicador: programas de mentoring, playbooks de cultura o comunidades de práctica."},
+     {tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Succession & knowledge transfer: documentar el ADN del equipo para que sobreviva cambios de membresía."},
+     {tag:"Experiencia",tc:"#14A0B4",tb:"#E3F5F8",text:"Proyecto de impacto social como equipo: voluntariado significativo, colaboración con ONG o iniciativa comunitaria."}
+   ]}
+];
+
+let cur=-1, ans=[], userName='', teamName='';
+
+function scores(){
+  const s={trust:0,conflict:0,clarity:0,cohesion:0,psafety:0,impact:0};
+  const c={trust:0,conflict:0,clarity:0,cohesion:0,psafety:0,impact:0};
+  ans.forEach((v,i)=>{s[Qs[i].dim]+=v;c[Qs[i].dim]++;});
+  Object.keys(s).forEach(k=>{if(c[k])s[k]=s[k]/c[k];});
+  return s;
+}
+function getStage(s){
+  const avg=(s.trust+s.conflict+s.clarity+s.cohesion+s.psafety+s.impact)/6;
+  if(s.trust<2.5&&s.clarity<2.5)return 0;
+  if(s.trust<2.8||s.conflict<2.5)return 1;
+  if(avg<3.2||s.cohesion<3)return 2;
+  if(s.psafety<3.8||avg<3.8)return 3;
+  if(s.impact<3.5)return 4;
+  return 5;
+}
+function getBlocker(s){return Object.entries(s).reduce((a,b)=>b[1]<a[1]?b:a)[0];}
+function pct(v){return Math.round((v-1)/4*100)+'%';}
+
+function generatePDF(){
+  const btn=document.getElementById('pdf-btn');
+  btn.classList.add('loading');
+  btn.textContent='Generando...';
+  setTimeout(()=>{
+    try{
+      const {jsPDF}=window.jspdf;
+      const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'letter'});
+      const PW=215.9, PH=279.4;
+      const s=scores();
+      const si=getStage(s);
+      const st=STAGES[si];
+      const bl=getBlocker(s);
+      const bld=DIMS[bl];
+      const date=new Date().toLocaleDateString('es-PR',{year:'numeric',month:'long',day:'numeric'});
+
+      const hex=h=>{const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return[r,g,b];};
+      const sf=h=>doc.setFillColor(...hex(h));
+      const st2=h=>doc.setTextColor(...hex(h));
+      const sd=h=>doc.setDrawColor(...hex(h));
+
+      // Header
+      sf('#282828'); doc.rect(0,0,PW,26,'F');
+      sf('#64B450'); doc.rect(0,0,PW,4,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(15);
+      st2('#FFFFFF'); doc.text('CenterPoint',12,16);
+      doc.setFont('helvetica','normal'); doc.setFontSize(8);
+      st2('#94A3B8'); doc.text('Team Development Model',12,22);
+      doc.setFont('helvetica','italic'); doc.setFontSize(7.5);
+      doc.text('Where teams grow together. And move forward.',PW-12,22,'right');
+
+      // Title block
+      let y=36;
+      doc.setFont('helvetica','bold'); doc.setFontSize(19);
+      st2('#282828'); doc.text('Diagnóstico de Equipo',12,y);
+      y+=7;
+      doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+      st2('#6B7280');
+      const byline=[userName,teamName].filter(Boolean).join(' · ');
+      if(byline){doc.text(byline,12,y);y+=5;}
+      doc.text(date,12,y); y+=8;
+
+      // Stage card
+      sf(st.al); doc.roundedRect(12,y,PW-24,26,3,3,'F');
+      sf(st.ac); doc.roundedRect(12,y,PW-24,4,2,2,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(12);
+      st2(st.ac); doc.text(`0${si+1} · ${st.name}`,18,y+12);
+      doc.setFont('helvetica','normal'); doc.setFontSize(9);
+      st2(st.ad); doc.text(st.sub,18,y+20);
+      y+=32;
+
+      // Insight
+      sf('#F5F5F5'); doc.roundedRect(12,y,PW-24,20,2,2,'F');
+      doc.setFont('helvetica','italic'); doc.setFontSize(8.5);
+      st2('#374151');
+      const iLines=doc.splitTextToSize(st.insight,PW-32);
+      doc.text(iLines,18,y+7);
+      y+=26;
+
+      // Dimensions
+      doc.setFont('helvetica','bold'); doc.setFontSize(9);
+      st2('#6B7280'); doc.text('PERFIL DE DIMENSIONES',12,y);
+      y+=4; sd('#E5E7EB'); doc.setLineWidth(0.3); doc.line(12,y,PW-12,y); y+=5;
+      const barW=PW-24-40;
+      Object.entries(s).forEach(([k,v])=>{
+        const d=DIMS[k];
+        doc.setFont('helvetica','normal'); doc.setFontSize(8.5);
+        st2('#111'); doc.text(d.label,12,y+3.5);
+        doc.setFont('helvetica','bold'); st2(d.color);
+        doc.text(v.toFixed(1)+'/5',PW-12,y+3.5,'right');
+        sf('#E5E7EB'); doc.roundedRect(12,y+5,barW,3.5,1,1,'F');
+        const fw=(v-1)/4*barW;
+        if(fw>0){sf(d.color); doc.roundedRect(12,y+5,fw,3.5,1,1,'F');}
+        y+=14;
+      });
+      y+=4;
+
+      // Critical factor
+      doc.setFont('helvetica','bold'); doc.setFontSize(9);
+      st2('#6B7280'); doc.text('FACTOR CRÍTICO',12,y);
+      y+=5;
+      const bLines=doc.splitTextToSize(BLOCKERS[bl],PW-36);
+      const bH=bLines.length*4.5+16;
+      sf(bld.bg); doc.roundedRect(12,y,PW-24,bH,2,2,'F');
+      sf(bld.color); doc.rect(12,y,3,bH,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+      st2(bld.color); doc.text(bld.label,20,y+8);
+      doc.setFont('helvetica','normal'); doc.setFontSize(8);
+      doc.text(bLines,20,y+14);
+      y+=bH+6;
+
+      // Recommendations
+      doc.setFont('helvetica','bold'); doc.setFontSize(9);
+      st2('#6B7280'); doc.text('PRÓXIMOS PASOS RECOMENDADOS',12,y);
+      y+=4; sd('#E5E7EB'); doc.line(12,y,PW-12,y); y+=5;
+      st.recs.forEach(r=>{
+        const rLines=doc.splitTextToSize(r.text,PW-52);
+        const rH=rLines.length*4.5+14;
+        sf('#FFFFFF'); sd('#E5E7EB'); doc.setLineWidth(0.3);
+        doc.roundedRect(12,y,PW-24,rH,2,2,'FD');
+        sf(r.tb); doc.roundedRect(16,y+4,22,7,1.5,1.5,'F');
+        doc.setFont('helvetica','bold'); doc.setFontSize(6);
+        st2(r.tc); doc.text(r.tag,27,y+8.5,'center');
+        doc.setFont('helvetica','normal'); doc.setFontSize(8.5);
+        st2('#374151'); doc.text(rLines,42,y+9);
+        y+=rH+3;
+      });
+
+      // Footer
+      sf('#282828'); doc.rect(0,PH-12,PW,12,'F');
+      doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+      st2('#94A3B8');
+      doc.text('CenterPoint · Team Development Model · centerpoint.pr',PW/2,PH-5,'center');
+
+      const fname='CenterPoint_Diagnostico'+(teamName?'_'+teamName.replace(/\s+/g,'_'):'')+'.pdf';
+      doc.save(fname);
+    }catch(e){
+      console.error(e);
+      alert('Error generando el PDF. Por favor intenta de nuevo.');
+    }
+    btn.classList.remove('loading');
+    btn.innerHTML='&#8595; Descargar PDF';
+  },120);
+}
+
+function render(){
+  const app=document.getElementById('app');
+  if(cur===-1){
+    app.innerHTML=`<div class="screen on">
+      <div class="intro-logo">CenterPoint</div>
+      <div class="intro-title">Diagnóstico de equipo</div>
+      <div class="intro-sub">12 preguntas para identificar en qué etapa de desarrollo se encuentra tu equipo y cuál es el tipo de intervención que más le conviene.</div>
+      <div class="intro-note">Responde basándote en la realidad actual del equipo — no en el ideal ni en cómo te gustaría que fuera. No hay respuestas correctas o incorrectas.</div>
+      <div class="field-group">
+        <div class="field-label">Tu nombre <span style="color:var(--t3);font-weight:400">(opcional)</span></div>
+        <input class="field-input" id="f-name" type="text" placeholder="Ej: María González" autocomplete="name">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Nombre del equipo <span style="color:var(--t3);font-weight:400">(opcional)</span></div>
+        <input class="field-input" id="f-team" type="text" placeholder="Ej: Equipo de Estrategia">
+      </div>
+      <button class="start-btn" style="background:#64B450" onclick="start()">Comenzar diagnóstico →</button>
+    </div>`;
+  } else if(cur<Qs.length){
+    const q=Qs[cur];
+    const pctW=Math.round(cur/Qs.length*100)+'%';
+    const d=DIMS[q.dim];
+    app.innerHTML=`<div class="screen on">
+      <div class="prog-wrap"><div class="prog-fill" style="width:${pctW};background:#64B450"></div></div>
+      <div class="q-meta">Pregunta ${cur+1} de ${Qs.length} <span class="q-dim-badge" style="background:${d.bg};color:${d.color}">${d.label}</span></div>
+      <div class="q-text">${q.q}</div>
+      <div class="scale-ends"><span>Casi nunca</span><span>Siempre</span></div>
+      <div class="scale-btns">${[1,2,3,4,5].map(v=>`<button class="sbtn" id="b${v}" onclick="pick(${v})">${v}</button>`).join('')}</div>
+    </div>`;
+  } else {
+    const s=scores();
+    const si=getStage(s);
+    const st=STAGES[si];
+    const bl=getBlocker(s);
+    const bld=DIMS[bl];
+    app.innerHTML=`<div class="screen on">
+      <div style="margin-bottom:16px">
+        ${teamName?`<div style="font-size:11px;color:var(--t3);margin-bottom:6px;font-weight:500;text-transform:uppercase;letter-spacing:.04em">${teamName}</div>`:''}
+        <span class="res-badge" style="background:${st.al};color:${st.ad}">0${si+1} · ${st.name}</span>
+        <div class="res-name">${st.name}</div>
+        <div class="res-sub">${st.sub}</div>
+        <div class="res-insight">${st.insight}</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Perfil de dimensiones</div>
+        ${Object.entries(s).map(([k,v])=>{const d=DIMS[k];return`<div class="dim-row">
+          <div class="dim-hd"><span class="dim-lbl">${d.label}</span><span class="dim-sc">${v.toFixed(1)} / 5</span></div>
+          <div class="dim-bg"><div class="dim-fill" id="df-${k}" style="width:0;background:${d.color}"></div></div>
+        </div>`;}).join('')}
+      </div>
+      <div class="blocker-card" style="background:${bld.bg};border-color:${bld.color}">
+        <div class="blocker-label" style="color:${bld.color}">Factor crítico — ${bld.label}</div>
+        <div class="blocker-text" style="color:${bld.color}">${BLOCKERS[bl]}</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Próximos pasos recomendados</div>
+        ${st.recs.map(r=>`<div class="rec-item">
+          <span class="rec-tag" style="background:${r.tb};color:${r.tc}">${r.tag}</span>
+          <span>${r.text}</span>
+        </div>`).join('')}
+      </div>
+      <div class="btn-row">
+        <button class="cta-btn" style="background:${st.ac}">Conversemos →</button>
+        <button class="pdf-btn" id="pdf-btn" onclick="generatePDF()">&#8595; Descargar PDF</button>
+      </div>
+      <button class="restart-btn" onclick="restart()">Volver a empezar</button>
+      <div class="footer">CenterPoint · Team Development Model</div>
+    </div>`;
+    setTimeout(()=>{
+      Object.entries(s).forEach(([k,v])=>{
+        const el=document.getElementById('df-'+k);
+        if(el)el.style.width=pct(v);
+      });
+    },100);
+  }
+}
+function start(){
+  userName=document.getElementById('f-name')?.value.trim()||'';
+  teamName=document.getElementById('f-team')?.value.trim()||'';
+  cur=0; render();
+}
+function pick(v){
+  const colors={1:"#993C1D",2:"#854F0B",3:"#888780",4:"#64B450",5:"#14A0B4"};
+  const btn=document.getElementById('b'+v);
+  if(btn){btn.style.cssText=`background:${colors[v]};border-color:${colors[v]};color:#fff`;}
+  setTimeout(()=>{ans.push(v);cur++;render();},220);
+}
+function restart(){cur=-1;ans=[];userName='';teamName='';render();}
+render();
+</script>
+</body>
+</html>
