@@ -171,7 +171,7 @@ const STAGES=[
 
 const GAP_INSIGHT="Este equipo tiene fortalezas reales en cómo se relaciona y opera. Sin embargo, aún no ha construido las prácticas deliberadas que convierten esas fortalezas en algo sostenible, que funciona incluso cuando cambia la gente. Esa es exactamente la diferencia entre un equipo naturalmente bueno y uno intencionalmente desarrollado.";
 
-let cur=-1, ans=[], pracAns=[], userName='', companyName='', teamName='', userEmail='', showingResults=false;
+let cur=-1, ans=[], pracAns=[], userName='', companyName='', teamName='', showingResults=false;
 
 function scores(){
   const s={trust:0,conflict:0,clarity:0,cohesion:0,psafety:0,impact:0};
@@ -373,10 +373,6 @@ function render(){
         <div class="field-label">Equipo o departamento</div>
         <input class="field-input" id="f-team" type="text" placeholder="">
       </div>
-      <div class="field-group">
-        <div class="field-label">Tu correo electrónico <span style="color:var(--t3);font-weight:400">(para recibir tu resultado)</span></div>
-        <input class="field-input" id="f-email" type="email" placeholder="Ej: maria@empresa.com" autocomplete="email">
-      </div>
       <button class="start-btn" style="background:#64B450" onclick="start()">Comenzar diagnóstico →</button>
     </div>`;
 
@@ -457,9 +453,13 @@ function renderResultados(){
         <span>${r.text}</span>
       </div>`).join('')}
     </div>
+    <div class="field-group" style="margin-top:20px">
+      <div class="field-label">Recibe tu resultado por email</div>
+      <input class="field-input" id="res-email" type="email" placeholder="Ej: maria@empresa.com" autocomplete="email">
+    </div>
     <div class="btn-row">
       <button class="cta-btn" style="background:${st.ac}">Conversemos →</button>
-      <button class="pdf-btn" id="pdf-btn" onclick="generatePDF()">&#8595; Descargar PDF</button>
+      <button class="pdf-btn" id="pdf-btn" onclick="enviarPDF()">Enviar PDF al email →</button>
     </div>
     <button class="restart-btn" onclick="restart()">Volver a empezar</button>
     <div class="footer">CenterPoint · Team Development Model</div>
@@ -479,19 +479,48 @@ function saveDiagnostic(s, si, st, gapped){
     body:JSON.stringify({
       name: userName||null,
       org: [companyName,teamName].filter(Boolean).join(' · ')||null,
-      email: userEmail||null,
       stage: st.name,
       stageIndex: si,
       scores: s,
-      gapped: !!gapped
+      gapped: !!gapped,
+      action: 'save'
     })
   }).catch(()=>{});
+}
+function enviarPDF(){
+  const emailEl=document.getElementById('res-email');
+  const email=(emailEl?.value||'').trim();
+  if(!email||!email.includes('@')){emailEl?.focus();return;}
+  const btn=document.getElementById('pdf-btn');
+  btn.textContent='Enviando...';btn.disabled=true;
+  const s=scores();
+  const si=getStage(s);
+  const st=STAGES[si];
+  fetch('/.netlify/functions/save-diagnostic',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      name: userName||null,
+      org: [companyName,teamName].filter(Boolean).join(' · ')||null,
+      email: email,
+      stage: st.name,
+      stageIndex: si,
+      scores: s,
+      gapped: isGapped(s),
+      action: 'email'
+    })
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.ok){btn.textContent='✓ Enviado';btn.style.cssText='background:#64B450;color:#fff;border-color:#64B450;cursor:default';}
+    else{btn.textContent='Error — intenta de nuevo';btn.disabled=false;}
+  })
+  .catch(()=>{btn.textContent='Error — intenta de nuevo';btn.disabled=false;});
 }
 function start(){
   userName=document.getElementById('f-name')?.value.trim()||'';
   companyName=document.getElementById('f-company')?.value.trim()||'';
   teamName=document.getElementById('f-team')?.value.trim()||'';
-  userEmail=document.getElementById('f-email')?.value.trim()||'';
   cur=0;render();
 }
 function pick(v){
@@ -513,9 +542,6 @@ function goBack(){
 }
 function verResultados(){
   if(allPracAnswered()){
-    const s=scores();
-    const si=getStage(s);
-    saveDiagnostic(s, si, STAGES[si], isGapped(s));
     showingResults=true;
     renderResultados();
   }

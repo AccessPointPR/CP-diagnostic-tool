@@ -227,22 +227,24 @@ exports.handler = async (event) => {
   try { payload = JSON.parse(event.body); }
   catch { return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON' }) }; }
 
-  const { name, org, email, stage, stageIndex, scores, gapped } = payload;
+  const { name, org, email, stage, stageIndex, scores, gapped, action } = payload;
   const errors = [];
 
-  // 1. Save to Supabase
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/diagnostic_results`, {
-      method: 'POST',
-      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
-      body: JSON.stringify({ name: name || null, org: org || null, email: email || null, stage, stage_index: stageIndex, scores, created_at: new Date().toISOString() }),
-    });
-    if (!res.ok) errors.push('Supabase: ' + res.status + ' ' + await res.text());
-  } catch (err) { errors.push('Supabase: ' + err.message); }
+  // 1. Save to Supabase (skip if action === 'email')
+  if (action !== 'email') {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/diagnostic_results`, {
+        method: 'POST',
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        body: JSON.stringify({ name: name || null, org: org || null, email: email || null, stage, stage_index: stageIndex, scores, created_at: new Date().toISOString() }),
+      });
+      if (!res.ok) errors.push('Supabase: ' + res.status + ' ' + await res.text());
+    } catch (err) { errors.push('Supabase: ' + err.message); }
+  }
 
-  // 2. Generate PDF + Send email
+  // 2. Generate PDF + Send email (skip if action === 'save')
   const RESEND_KEY = process.env.RESEND_API_KEY;
-  if (email && RESEND_KEY) {
+  if (action !== 'save' && email && RESEND_KEY) {
     try {
       const pdfBuffer = await buildPDF({ name, org, stage, stageIndex, scores, gapped: !!gapped });
       const pdfB64 = pdfBuffer.toString('base64');
