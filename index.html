@@ -79,6 +79,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 </style>
 </head>
 <body>
+<img id="logo-img" src="CP%20logo.png" style="display:none" crossorigin="anonymous">
 <div id="app"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
@@ -238,8 +239,15 @@ function generatePDF(){
 
       sf('#282828');doc.rect(0,0,PW,26,'F');
       sf('#64B450');doc.rect(0,0,PW,4,'F');
-      doc.setFont('helvetica','bold');doc.setFontSize(15);
-      st2('#FFFFFF');doc.text('CenterPoint',12,16);
+      try{
+        const logoEl=document.getElementById('logo-img');
+        if(logoEl&&logoEl.complete&&logoEl.naturalWidth>0){
+          const c=document.createElement('canvas');
+          c.width=logoEl.naturalWidth;c.height=logoEl.naturalHeight;
+          c.getContext('2d').drawImage(logoEl,0,0);
+          doc.addImage(c.toDataURL('image/png'),'PNG',8,6,36,13);
+        }
+      }catch(_){}
       doc.setFont('helvetica','normal');doc.setFontSize(8);
       st2('#94A3B8');doc.text('Team Development Model',12,22);
       doc.setFont('helvetica','italic');doc.setFontSize(7.5);
@@ -349,7 +357,7 @@ function render(){
 
   if(cur===-1){
     app.innerHTML=`<div class="screen on">
-      <div class="intro-logo">CenterPoint</div>
+      <div class="intro-logo"><img src="CP%20logo.png" style="height:38px;display:block"></div>
       <div class="intro-title">Diagnóstico de equipo</div>
       <div class="intro-sub">Dos partes: 12 preguntas sobre cómo opera tu equipo, y 5 sobre las prácticas que ha construido. Menos de 5 minutos.</div>
       <div class="intro-note">Responde como líder o responsable del equipo, basándote en lo que observas en tu gente, no en cómo te sientes tú personalmente. No hay respuestas correctas o incorrectas: lo que importa es la realidad actual, no el ideal.</div>
@@ -464,7 +472,7 @@ function renderResultados(){
   },100);
 }
 
-function saveDiagnostic(s, si, st){
+function saveDiagnostic(s, si, st, gapped){
   fetch('/.netlify/functions/save-diagnostic', {
     method:'POST',
     headers:{'Content-Type':'application/json'},
@@ -474,7 +482,8 @@ function saveDiagnostic(s, si, st){
       email: userEmail||null,
       stage: st.name,
       stageIndex: si,
-      scores: s
+      scores: s,
+      gapped: !!gapped
     })
   }).catch(()=>{});
 }
@@ -506,7 +515,7 @@ function verResultados(){
   if(allPracAnswered()){
     const s=scores();
     const si=getStage(s);
-    saveDiagnostic(s, si, STAGES[si]);
+    saveDiagnostic(s, si, STAGES[si], isGapped(s));
     showingResults=true;
     renderResultados();
   }
