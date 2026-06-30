@@ -170,7 +170,7 @@ const STAGES=[
 
 const GAP_INSIGHT="Este equipo tiene fortalezas reales en cómo se relaciona y opera. Sin embargo, aún no ha construido las prácticas deliberadas que convierten esas fortalezas en algo sostenible, que funciona incluso cuando cambia la gente. Esa es exactamente la diferencia entre un equipo naturalmente bueno y uno intencionalmente desarrollado.";
 
-let cur=-1, ans=[], pracAns=[], userName='', companyName='', teamName='', showingResults=false;
+let cur=-1, ans=[], pracAns=[], userName='', companyName='', teamName='', userEmail='', showingResults=false;
 
 function scores(){
   const s={trust:0,conflict:0,clarity:0,cohesion:0,psafety:0,impact:0};
@@ -365,6 +365,10 @@ function render(){
         <div class="field-label">Equipo o departamento</div>
         <input class="field-input" id="f-team" type="text" placeholder="">
       </div>
+      <div class="field-group">
+        <div class="field-label">Tu correo electrónico <span style="color:var(--t3);font-weight:400">(para recibir tu resultado)</span></div>
+        <input class="field-input" id="f-email" type="email" placeholder="Ej: maria@empresa.com" autocomplete="email">
+      </div>
       <button class="start-btn" style="background:#64B450" onclick="start()">Comenzar diagnóstico →</button>
     </div>`;
 
@@ -460,10 +464,25 @@ function renderResultados(){
   },100);
 }
 
+function saveDiagnostic(s, si, st){
+  fetch('/.netlify/functions/save-diagnostic', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      name: userName||null,
+      org: [companyName,teamName].filter(Boolean).join(' · ')||null,
+      email: userEmail||null,
+      stage: st.name,
+      stageIndex: si,
+      scores: s
+    })
+  }).catch(()=>{});
+}
 function start(){
   userName=document.getElementById('f-name')?.value.trim()||'';
   companyName=document.getElementById('f-company')?.value.trim()||'';
   teamName=document.getElementById('f-team')?.value.trim()||'';
+  userEmail=document.getElementById('f-email')?.value.trim()||'';
   cur=0;render();
 }
 function pick(v){
@@ -484,7 +503,13 @@ function goBack(){
   if(cur===0){cur=-1;ans=[];render();}
 }
 function verResultados(){
-  if(allPracAnswered()){showingResults=true;renderResultados();}
+  if(allPracAnswered()){
+    const s=scores();
+    const si=getStage(s);
+    saveDiagnostic(s, si, STAGES[si]);
+    showingResults=true;
+    renderResultados();
+  }
 }
 function restart(){cur=-1;ans=[];pracAns=[];userName='';companyName='';teamName='';showingResults=false;render();}
 render();
