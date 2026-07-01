@@ -104,7 +104,7 @@ function buildPDF({ name, org, stage, stageIndex, scores, gapped }) {
     const meta = [name, org].filter(Boolean);
     if (meta.length) { doc.text(meta.join(' - '), ML, y, { width: CW }); y += 14; }
     doc.text(date, ML, y, { width: CW });
-    y += 20;
+    y += 24;
 
     // STAGE CARD
     doc.roundedRect(ML, y, CW, 54, 4).fill(st.al);
@@ -113,30 +113,30 @@ function buildPDF({ name, org, stage, stageIndex, scores, gapped }) {
        .text('0' + (stageIndex + 1) + ' - ' + st.name, ML + 14, y + 13, { width: CW - 28 });
     doc.font('Helvetica').fontSize(9.5).fillColor(st.ad)
        .text(st.sub, ML + 14, y + 32, { width: CW - 28 });
-    y += 64;
+    y += 70;
 
     // INSIGHT
-    const iH = doc.heightOfString(st.insight, { width: CW - 24 }) + 20;
+    const iH = doc.heightOfString(st.insight, { width: CW - 24 }) + 24;
     doc.roundedRect(ML, y, CW, iH, 3).fill('#F5F5F5');
     doc.font('Helvetica-Oblique').fontSize(9).fillColor('#374151')
-       .text(st.insight, ML + 12, y + 10, { width: CW - 24 });
-    y += iH + 8;
+       .text(st.insight, ML + 12, y + 12, { width: CW - 24 });
+    y += iH + 14;
 
     // GAP
     if (gapped) {
-      const gH = doc.heightOfString(GAP_INSIGHT, { width: CW - 22 }) + 20;
+      const gH = doc.heightOfString(GAP_INSIGHT, { width: CW - 22 }) + 24;
       doc.roundedRect(ML, y, CW, gH, 3).fill('#EBF5E6');
       doc.rect(ML, y, 4, gH).fill('#64B450');
       doc.font('Helvetica-Oblique').fontSize(8.5).fillColor('#374151')
-         .text(GAP_INSIGHT, ML + 14, y + 10, { width: CW - 22 });
-      y += gH + 8;
+         .text(GAP_INSIGHT, ML + 14, y + 12, { width: CW - 22 });
+      y += gH + 14;
     }
 
     // DIMENSIONS
     doc.font('Helvetica-Bold').fontSize(9).fillColor('#6B7280').text('PERFIL DE DIMENSIONES', ML, y, { width: CW, characterSpacing: 0.5 });
-    y += 7;
+    y += 8;
     doc.moveTo(ML, y).lineTo(W - ML, y).lineWidth(0.3).stroke('#E5E7EB');
-    y += 6;
+    y += 8;
     const barX = ML + 195, barW = CW - 200;
     Object.entries(scores).forEach(([k, v]) => {
       const d = DIMS[k];
@@ -146,34 +146,34 @@ function buildPDF({ name, org, stage, stageIndex, scores, gapped }) {
          .text(parseFloat(v).toFixed(1) + '/5', ML + 145, y + 3, { width: 44, align: 'right', lineBreak: false });
       doc.roundedRect(barX, y + 5, barW, 4, 1).fill('#E5E7EB');
       if (fillW > 0) doc.roundedRect(barX, y + 5, fillW, 4, 1).fill(d.color);
-      y += 16;
+      y += 18;
     });
-    y += 8;
+    y += 14;
 
     // CRITICAL FACTOR
     doc.font('Helvetica-Bold').fontSize(9).fillColor('#6B7280').text('FACTOR CRÍTICO', ML, y, { width: CW });
     y += 8;
     const bTxt = BLOCKERS[bl];
-    const bH = doc.heightOfString(bTxt, { width: CW - 20 }) + 26;
+    const bH = doc.heightOfString(bTxt, { width: CW - 20 }) + 30;
     doc.roundedRect(ML, y, CW, bH, 3).fill(bld.bg);
     doc.rect(ML, y, 4, bH).fill(bld.color);
-    doc.font('Helvetica-Bold').fontSize(8.5).fillColor(bld.color).text(bld.label, ML + 14, y + 9, { width: CW - 20 });
-    doc.font('Helvetica').fontSize(8.5).fillColor(bld.color).text(bTxt, ML + 14, y + 22, { width: CW - 20 });
-    y += bH + 10;
+    doc.font('Helvetica-Bold').fontSize(8.5).fillColor(bld.color).text(bld.label, ML + 14, y + 10, { width: CW - 20 });
+    doc.font('Helvetica').fontSize(8.5).fillColor(bld.color).text(bTxt, ML + 14, y + 24, { width: CW - 20 });
+    y += bH + 16;
 
     // RECOMMENDATIONS
     doc.font('Helvetica-Bold').fontSize(9).fillColor('#6B7280').text('PRÓXIMOS PASOS RECOMENDADOS', ML, y, { width: CW });
-    y += 7;
+    y += 8;
     doc.moveTo(ML, y).lineTo(W - ML, y).lineWidth(0.3).stroke('#E5E7EB');
-    y += 6;
+    y += 8;
     st.recs.forEach(rec => {
-      const rH = doc.heightOfString(rec.text, { width: CW - 58 }) + 22;
+      const rH = doc.heightOfString(rec.text, { width: CW - 58 }) + 26;
       doc.roundedRect(ML, y, CW, rH, 3).lineWidth(0.3).fillAndStroke('#FFFFFF', '#E5E7EB');
       doc.roundedRect(ML + 8, y + Math.floor((rH - 16) / 2), 38, 14, 2).fill(rec.tb);
       doc.font('Helvetica-Bold').fontSize(6).fillColor(rec.tc)
          .text(rec.tag, ML + 8, y + Math.floor((rH - 16) / 2) + 4, { width: 38, align: 'center', lineBreak: false });
-      doc.font('Helvetica').fontSize(8.5).fillColor('#374151').text(rec.text, ML + 52, y + 11, { width: CW - 58 });
-      y += rH + 4;
+      doc.font('Helvetica').fontSize(8.5).fillColor('#374151').text(rec.text, ML + 52, y + 13, { width: CW - 58 });
+      y += rH + 6;
     });
 
     // FOOTER
