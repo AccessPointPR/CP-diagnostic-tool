@@ -11,7 +11,7 @@ const DIMS = {
   clarity:  { label: 'Claridad',                color: '#854F0B', bg: '#FAEEDA' },
   cohesion: { label: 'Cohesión',                color: '#64B450', bg: '#EBF5E6' },
   psafety:  { label: 'Seguridad psicológica',   color: '#534AB7', bg: '#E5E3FC' },
-  impact:   { label: 'Impacto colectivo',       color: '#888780', bg: '#F1EFE8' },
+  impact:   { label: 'Orientación externa',       color: '#888780', bg: '#F1EFE8' },
 };
 
 const BLOCKERS = {
