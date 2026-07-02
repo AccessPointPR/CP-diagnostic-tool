@@ -152,7 +152,7 @@ function buildPDF({ name, org, stage, stageIndex, scores, gapped }) {
 
     // CRITICAL FACTOR
     doc.font('Helvetica-Bold').fontSize(9).fillColor('#6B7280').text('FACTOR CRÍTICO', ML, y, { width: CW });
-    y += 8;
+    y += 14;
     const bTxt = BLOCKERS[bl];
     const bH = doc.heightOfString(bTxt, { width: CW - 20 }) + 30;
     doc.roundedRect(ML, y, CW, bH, 3).fill(bld.bg);
