@@ -179,7 +179,7 @@ function buildPDF({ name, org, stage, stageIndex, scores, gapped }) {
     // FOOTER
     doc.rect(0, H - 24, W, 24).fill('#282828');
     doc.font('Helvetica').fontSize(7.5).fillColor('#94A3B8')
-       .text('CenterPoint - Team Development Model - centerpointpr.com', 0, H - 16, { width: W, align: 'center' });
+       .text('CenterPoint · centerpointpr.com · connect@centerpointpr.com', 0, H - 16, { width: W, align: 'center' });
 
     doc.end();
   });
