@@ -57,12 +57,12 @@ const STAGES = [
     recs: [
       { tag: 'Sesión', tc: '#534AB7', tb: '#E5E3FC', text: 'Auditoría de seguridad psicológica (Edmondson Scale) para identificar zonas de autocensura o asimetría que aún no se ven.' },
       { tag: 'Sesión', tc: '#64B450', tb: '#EBF5E6', text: 'Sesión de visión de legado: qué queremos que digan de este equipo en 3 años. Future-back visioning.' },
-      { tag: 'Multiplicador', tc: '#534AB7', tb: '#E5E3FC', text: 'Diseñar cómo este equipo puede servir a otros: comunidad de práctica, mentoría a equipos más jóvenes, exportar sus normas.' },
+      { tag: 'Proyecto', tc: '#534AB7', tb: '#E5E3FC', text: 'Diseñar cómo este equipo puede servir a otros: comunidad de práctica, mentoría a equipos más jóvenes, exportar sus normas.' },
     ] },
   { name: 'Generative', sub: 'Equipos que multiplican impacto hacia afuera', ac: '#534AB7', al: '#EEEDFE', ad: '#26215C',
     insight: 'Este equipo opera más allá de sí mismo. El trabajo ahora es institucionalizar esa generatividad para que sobreviva cambios y rotaciones.',
     recs: [
-      { tag: 'Multiplicador', tc: '#534AB7', tb: '#E5E3FC', text: 'Formalizar el rol multiplicador: programas de mentoría, playbooks de cultura o comunidades de práctica con otros equipos.' },
+      { tag: 'Proyecto', tc: '#534AB7', tb: '#E5E3FC', text: 'Formalizar el rol multiplicador: programas de mentoría, playbooks de cultura o comunidades de práctica con otros equipos.' },
       { tag: 'Sesión', tc: '#64B450', tb: '#EBF5E6', text: 'Succession y knowledge transfer: documentar el ADN del equipo para que el conocimiento no se vaya cuando se va una persona.' },
       { tag: 'Experiencia', tc: '#14A0B4', tb: '#E3F5F8', text: 'Proyecto de impacto colectivo: voluntariado significativo, colaboración con otra organización o iniciativa de transferencia de conocimiento.' },
     ] },
