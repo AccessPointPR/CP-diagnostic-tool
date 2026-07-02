@@ -211,7 +211,7 @@ function buildEmailHtml({ name, org, stage, stageIndex, scores }) {
     '<p style="margin:0 0 10px;font-size:11px;font-weight:600;color:#9CA3AF;text-transform:uppercase">Perfil de dimensiones</p>' +
     '<table style="border-collapse:collapse;width:100%;margin-bottom:24px"><tbody>' + dimRows + '</tbody></table>' +
     '<p style="margin:0 0 20px;font-size:13px;color:#6B7280;line-height:1.7">¿Quieres profundizar en estos resultados? <strong>Conversemos.</strong></p>' +
-    '<a href="mailto:equipo@centerpointpr.com" style="display:inline-block;background:#64B450;color:#fff;text-decoration:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:500">Contactar al equipo</a>' +
+    '<a href="mailto:connect@centerpointpr.com" style="display:inline-block;background:#64B450;color:#fff;text-decoration:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:500">Contactar al equipo</a>' +
     '</div><div style="background:#F9FAFB;border-top:1px solid #E5E7EB;padding:16px 28px;text-align:center">' +
     '<p style="margin:0;font-size:11px;color:#9CA3AF">CenterPoint - Team Development Model - centerpointpr.com</p>' +
     '</div></div></body></html>';
@@ -255,7 +255,7 @@ exports.handler = async (event) => {
         method: 'POST',
         headers: { Authorization: `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          from: 'CenterPoint <equipo@centerpointpr.com>',
+          from: 'CenterPoint <connect@centerpointpr.com>',
           to: [email],
           subject: 'Tu diagnostico de equipo - Etapa: ' + stage,
           html: buildEmailHtml(payload),
