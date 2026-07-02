@@ -359,7 +359,8 @@ function render(){
     app.innerHTML=`<div class="screen on">
       <div class="intro-logo"><img src="cp-logo.png" style="height:38px;display:block"></div>
       <div class="intro-title">Diagnóstico de equipo</div>
-      <div class="intro-sub">Dos partes: 12 preguntas sobre cómo opera tu equipo, y 5 sobre las prácticas que ha construido. Menos de 5 minutos.</div>
+      <div class="intro-sub">Descubre en qué etapa está tu equipo y qué necesita para avanzar.</div>
+      <div class="intro-sub" style="font-size:12.5px;margin-top:-6px">12 preguntas sobre cómo opera tu equipo y 5 sobre las prácticas que ha construido. Menos de 5 minutos.</div>
       <div class="intro-note">Responde como líder o responsable del equipo, basándote en lo que observas en tu gente, no en cómo te sientes tú personalmente. No hay respuestas correctas o incorrectas: lo que importa es la realidad actual, no el ideal.</div>
       <div class="field-group">
         <div class="field-label">Tu nombre</div>
@@ -370,7 +371,7 @@ function render(){
         <input class="field-input" id="f-company" type="text" placeholder="">
       </div>
       <div class="field-group">
-        <div class="field-label">Equipo o departamento</div>
+        <div class="field-label">Equipo o departamento <span style="font-weight:400;color:var(--t3)">(si aplica)</span></div>
         <input class="field-input" id="f-team" type="text" placeholder="">
       </div>
       <button class="start-btn" style="background:#64B450" onclick="start()">Comenzar diagnóstico →</button>
