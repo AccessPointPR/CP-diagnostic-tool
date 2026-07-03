@@ -9,7 +9,7 @@ const DIMS = {
   trust:    { label: 'Confianza',               color: '#14A0B4', bg: '#E3F5F8' },
   conflict: { label: 'Gestión del conflicto',   color: '#993C1D', bg: '#FAECE7' },
   clarity:  { label: 'Claridad',                color: '#854F0B', bg: '#FAEEDA' },
-  cohesion: { label: 'Cohesión',                color: '#64B450', bg: '#EBF5E6' },
+  cohesion: { label: 'Pertenencia',                color: '#64B450', bg: '#EBF5E6' },
   psafety:  { label: 'Seguridad psicológica',   color: '#534AB7', bg: '#E5E3FC' },
   impact:   { label: 'Orientación externa',       color: '#888780', bg: '#F1EFE8' },
 };
