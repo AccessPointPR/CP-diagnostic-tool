@@ -230,8 +230,8 @@ exports.handler = async (event) => {
   const { name, org, email, stage, stageIndex, scores, gapped, action } = payload;
   const errors = [];
 
-  // 1. Save to Supabase (skip if action === 'email')
-  if (action !== 'email') {
+  // 1. Save to Supabase (always)
+  {
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/diagnostic_results`, {
         method: 'POST',
