@@ -263,6 +263,25 @@ exports.handler = async (event) => {
         }),
       });
       if (!res.ok) errors.push('Resend: ' + res.status + ' ' + await res.text());
+
+      // Notification email to CenterPoint
+      const notifHtml = '<p>Nuevo diagnóstico completado.</p>' +
+        '<ul>' +
+        '<li><strong>Nombre:</strong> ' + (name || '—') + '</li>' +
+        '<li><strong>Organización:</strong> ' + (org || '—') + '</li>' +
+        '<li><strong>Email:</strong> ' + (email || '—') + '</li>' +
+        '<li><strong>Etapa:</strong> ' + stage + '</li>' +
+        '</ul>';
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: 'CenterPoint Diagnóstico <connect@centerpointpr.com>',
+          to: ['connect@centerpointpr.com'],
+          subject: 'Nuevo diagnóstico: ' + (name || 'Anónimo') + ' — ' + stage,
+          html: notifHtml,
+        }),
+      }).catch(() => {});
     } catch (err) { errors.push('Email/PDF: ' + err.message); }
   }
 
