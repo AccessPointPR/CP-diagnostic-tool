@@ -227,7 +227,7 @@ exports.handler = async (event) => {
   try { payload = JSON.parse(event.body); }
   catch { return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON' }) }; }
 
-  const { name, org, email, stage, stageIndex, scores, gapped, action } = payload;
+  const { name, org, email, stage, stageIndex, scores, gapped, action, responses, pracResponses } = payload;
   const errors = [];
 
   // 1. Save to Supabase (always)
@@ -236,10 +236,82 @@ exports.handler = async (event) => {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/diagnostic_results`, {
         method: 'POST',
         headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
-        body: JSON.stringify({ name: name || null, org: org || null, email: email || null, stage, stage_index: stageIndex, scores, created_at: new Date().toISOString() }),
+        body: JSON.stringify({ name: name || null, org: org || null, email: email || null, stage, stage_index: stageIndex, scores, responses: responses || null, prac_responses: pracResponses || null, created_at: new Date().toISOString() }),
       });
       if (!res.ok) errors.push('Supabase: ' + res.status + ' ' + await res.text());
     } catch (err) { errors.push('Supabase: ' + err.message); }
+  }
+
+  // 2. Create Notion page
+  const NOTION_KEY = process.env.NOTION_API_KEY;
+  const NOTION_DB = process.env.NOTION_DATABASE_ID || '39c016076b0e80aba557d994ae4f192d';
+  if (NOTION_KEY) {
+    try {
+      const QS_LABELS = [
+        'Las personas se sienten seguras admitiendo errores',
+        'Los miembros se muestran como son',
+        'Los desacuerdos se abordan de forma directa',
+        'Los conflictos terminan siendo productivos',
+        'Todos tienen claras las prioridades y expectativas',
+        'Está claro quién decide qué',
+        'El equipo tiene formas de trabajar conocidas y respetadas',
+        'Los miembros se sienten parte del equipo',
+        'Las personas pueden expresar ideas diferentes al líder',
+        'Señalar un problema es valorado',
+        'Las personas cumplen compromisos entre ellas',
+        'El equipo comparte lo que aprende hacia afuera',
+      ];
+      const PS_LABELS = [
+        'Sesión facilitada sobre cómo trabajan juntos',
+        'Assessment de estilos (DiSC, StrengthsFinder, etc.)',
+        'Acuerdos de trabajo explícitos y documentados',
+        'Proceso formal de retroalimentación entre pares',
+        'Han compartido conocimiento con otros equipos',
+      ];
+      const SCORE_LABELS = { 1: '1 – Casi nunca', 2: '2 – Pocas veces', 3: '3 – A veces', 4: '4 – Frecuentemente', 5: '5 – Siempre' };
+      const PRAC_LABELS = { 1: 'Sí', 2: 'No', 3: 'En proceso' };
+      const date = new Date().toISOString().split('T')[0];
+
+      const dimBlocks = Object.entries(scores).map(([k, v]) => ({
+        object: 'block', type: 'bulleted_list_item',
+        bulleted_list_item: { rich_text: [{ type: 'text', text: { content: (DIMS[k]?.label || k) + ': ' + parseFloat(v).toFixed(1) + '/5' } }] }
+      }));
+
+      const respBlocks = (responses || []).map((v, i) => ({
+        object: 'block', type: 'bulleted_list_item',
+        bulleted_list_item: { rich_text: [{ type: 'text', text: { content: 'P' + (i + 1) + '. ' + (QS_LABELS[i] || '') + ' → ' + (SCORE_LABELS[v] || v) } }] }
+      }));
+
+      const pracBlocks = (pracResponses || []).map((v, i) => ({
+        object: 'block', type: 'bulleted_list_item',
+        bulleted_list_item: { rich_text: [{ type: 'text', text: { content: (PS_LABELS[i] || 'P' + (i + 1)) + ' → ' + (PRAC_LABELS[v] || v) } }] }
+      }));
+
+      const blocks = [
+        { object: 'block', type: 'heading_2', heading_2: { rich_text: [{ type: 'text', text: { content: 'Información' } }] } },
+        { object: 'block', type: 'bulleted_list_item', bulleted_list_item: { rich_text: [{ type: 'text', text: { content: 'Email: ' + (email || '—') } }] } },
+        { object: 'block', type: 'bulleted_list_item', bulleted_list_item: { rich_text: [{ type: 'text', text: { content: 'Fecha: ' + date } }] } },
+        { object: 'block', type: 'bulleted_list_item', bulleted_list_item: { rich_text: [{ type: 'text', text: { content: 'Etapa: ' + stage } }] } },
+        { object: 'block', type: 'heading_2', heading_2: { rich_text: [{ type: 'text', text: { content: 'Dimensiones' } }] } },
+        ...dimBlocks,
+        { object: 'block', type: 'heading_2', heading_2: { rich_text: [{ type: 'text', text: { content: 'Respuestas — Preguntas de dimensiones' } }] } },
+        ...respBlocks,
+        { object: 'block', type: 'heading_2', heading_2: { rich_text: [{ type: 'text', text: { content: 'Respuestas — Prácticas del equipo' } }] } },
+        ...pracBlocks,
+      ];
+
+      await fetch('https://api.notion.com/v1/pages', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${NOTION_KEY}`, 'Content-Type': 'application/json', 'Notion-Version': '2022-06-28' },
+        body: JSON.stringify({
+          parent: { database_id: NOTION_DB },
+          properties: {
+            title: { title: [{ type: 'text', text: { content: [name, org].filter(Boolean).join(' · ') || 'Anónimo · ' + date } }] },
+          },
+          children: blocks,
+        }),
+      }).then(r => { if (!r.ok) r.text().then(t => console.error('Notion error:', t)); });
+    } catch (err) { console.error('Notion:', err.message); }
   }
 
   // 2. Generate PDF + Send email (skip if action === 'save')
