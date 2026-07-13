@@ -65,6 +65,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .restart-btn:hover{border-color:var(--b2);color:var(--t1)}
 .back-btn{display:inline-flex;align-items:center;gap:5px;background:none;border:none;font-family:inherit;font-size:12px;color:var(--t3);cursor:pointer;padding:0;margin-bottom:20px;transition:color .12s}
 .back-btn:hover{color:var(--t2)}
+.lang-toggle{display:flex;gap:4px;margin-top:4px}
+.lang-btn{background:none;border:1.5px solid var(--b2);border-radius:6px;font-family:inherit;font-size:11px;font-weight:600;color:var(--t3);cursor:pointer;padding:3px 9px;transition:all .15s;letter-spacing:.04em}
+.lang-btn.active{background:#64B450;border-color:#64B450;color:#fff}
+.lang-btn:not(.active):hover{border-color:var(--t2);color:var(--t2)}
 .footer{font-size:11px;color:var(--t3);text-align:center;margin-top:20px;letter-spacing:.02em}
 .prac-screen-title{font-size:11px;font-weight:500;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
 .prac-screen-note{font-size:12.5px;color:var(--t2);line-height:1.65;margin-bottom:16px;padding:10px 14px;background:var(--bg2);border-radius:var(--r)}
@@ -85,7 +89,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 <div id="app"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-const Qs=[
+// ── SPANISH ──────────────────────────────────────────────────────────────────
+const ES_QS=[
   {q:"En este equipo, las personas se sienten seguras admitiendo errores o diciendo que no saben cómo resolver algo.",dim:"trust"},
   {q:"Los miembros del equipo se muestran como son, sin necesidad de aparentar o guardar las apariencias.",dim:"trust"},
   {q:"Cuando hay desacuerdos o tensiones en el equipo, se abordan de forma directa, sin rodeos ni evasión.",dim:"conflict"},
@@ -99,16 +104,14 @@ const Qs=[
   {q:"Las personas cumplen sus compromisos entre ellas, no solo frente al líder o en reuniones formales.",dim:"impact"},
   {q:"Este equipo comparte activamente lo que aprende con personas o equipos fuera de su propio grupo.",dim:"impact"}
 ];
-
-const Ps=[
+const ES_PS=[
   "El equipo ha tenido al menos una sesión facilitada enfocada en cómo trabajan juntos, no en el trabajo en sí.",
   "Los miembros del equipo han completado algún assessment de personalidad o estilos de comunicación juntos (DiSC, StrengthsFinder, MBTI u otro).",
   "Existen acuerdos de trabajo explícitos y documentados: normas sobre cómo se toman decisiones, se resuelven conflictos o se comunican.",
   "Hay un proceso formal para que los miembros del equipo se den retroalimentación entre ellos, no solo del líder al equipo.",
   "Este equipo ha compartido activamente lo que sabe o cómo trabaja con otros equipos o personas fuera de su grupo."
 ];
-
-const DIMS={
+const ES_DIMS={
   trust:{label:"Confianza",color:"#14A0B4",bg:"#E3F5F8"},
   conflict:{label:"Gestión del conflicto",color:"#993C1D",bg:"#FAECE7"},
   clarity:{label:"Claridad",color:"#854F0B",bg:"#FAEEDA"},
@@ -116,8 +119,7 @@ const DIMS={
   psafety:{label:"Seguridad psicológica",color:"#534AB7",bg:"#E5E3FC"},
   impact:{label:"Orientación externa",color:"#888780",bg:"#F1EFE8"}
 };
-
-const BLOCKERS={
+const ES_BLOCKERS={
   trust:"La confianza es la base de todo. Sin ella, el conflicto se evita, los compromisos son superficiales y la seguridad psicológica es imposible. Este es el punto de palanca más crítico ahora mismo.",
   conflict:"El equipo evita el conflicto o no lo maneja bien. Eso crea tensiones que van por debajo de la superficie y corroen la colaboración sin que nadie lo nombre directamente.",
   clarity:"Hay ambigüedad en objetivos o roles. Cuando cada persona tiene una versión distinta de hacia dónde vamos o quién decide qué, la energía del equipo se fragmenta.",
@@ -126,52 +128,191 @@ const BLOCKERS={
   impact:"El equipo funciona bien internamente pero no ha desarrollado accountability mutuo ni orientación hacia afuera. Eso limita su influencia organizacional."
 };
 
-const STAGES=[
+// ── ENGLISH ──────────────────────────────────────────────────────────────────
+const EN_QS=[
+  {q:"People on this team feel safe admitting mistakes or saying they don't know how to solve something.",dim:"trust"},
+  {q:"Team members show up as themselves, without needing to pretend or keep up appearances.",dim:"trust"},
+  {q:"When there are disagreements or tensions, they are addressed directly, without detours or avoidance.",dim:"conflict"},
+  {q:"Conflicts on this team end up being productive, without leaving wounds or accumulated resentment.",dim:"conflict"},
+  {q:"Everyone on the team is clear about the priorities and what is expected of each person.",dim:"clarity"},
+  {q:"It's clear who has authority to decide what, without confusion about roles or duplicated decisions.",dim:"clarity"},
+  {q:"The team has ways of working together that everyone knows, respects, and follows consistently.",dim:"cohesion"},
+  {q:"Team members genuinely feel like part of the team, not just a role or function within it.",dim:"cohesion"},
+  {q:"People on the team can express ideas or concerns even if they differ from what the leader thinks.",dim:"psafety"},
+  {q:"On this team, raising a problem is valued, not seen as negativity or disloyalty.",dim:"psafety"},
+  {q:"People follow through on commitments to each other, not just to the leader or in formal meetings.",dim:"impact"},
+  {q:"This team actively shares what it learns with people or teams outside its own group.",dim:"impact"}
+];
+const EN_PS=[
+  "The team has had at least one facilitated session focused on how they work together, not the work itself.",
+  "Team members have completed a personality or communication styles assessment together (DiSC, StrengthsFinder, MBTI, or similar).",
+  "There are explicit and documented working agreements: norms about how decisions are made, conflicts resolved, or communication handled.",
+  "There is a formal process for team members to give each other feedback, not just from the leader to the team.",
+  "This team has actively shared what it knows or how it works with other teams or people outside its group."
+];
+const EN_DIMS={
+  trust:{label:"Trust",color:"#14A0B4",bg:"#E3F5F8"},
+  conflict:{label:"Conflict management",color:"#993C1D",bg:"#FAECE7"},
+  clarity:{label:"Clarity",color:"#854F0B",bg:"#FAEEDA"},
+  cohesion:{label:"Belonging",color:"#64B450",bg:"#EBF5E6"},
+  psafety:{label:"Psychological safety",color:"#534AB7",bg:"#E5E3FC"},
+  impact:{label:"External orientation",color:"#888780",bg:"#F1EFE8"}
+};
+const EN_BLOCKERS={
+  trust:"Trust is the foundation of everything. Without it, conflict is avoided, commitments are superficial, and psychological safety is impossible. This is the most critical leverage point right now.",
+  conflict:"The team avoids conflict or doesn't handle it well. This creates tensions that run beneath the surface and erode collaboration without anyone naming them directly.",
+  clarity:"There is ambiguity in goals or roles. When each person has a different version of where we're going or who decides what, the team's energy fragments.",
+  cohesion:"The team has not developed solid norms or a collective identity. It functions as a group of individuals rather than a team with its own personality.",
+  psafety:"People don't feel safe expressing ideas, mistakes, or concerns freely. This limits innovation, collective learning, and deep trust.",
+  impact:"The team functions well internally but has not developed mutual accountability or outward orientation. This limits its organizational influence."
+};
+
+const ES_STAGES=[
   {name:"Forming",sub:"Conexión antes que contenido",ac:"#888780",al:"#F1EFE8",ad:"#2C2C2A",
    insight:"Este equipo está en construcción inicial. La prioridad no es la productividad máxima sino la conexión y la claridad de propósito compartido.",
    recs:[
-     {ef:"Structural",ec:"#0F6E56",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Taller de team charter: propósito compartido, expectativas mutuas y acuerdos de trabajo desde cero."},
-     {ef:"Structural",ec:"#0F6E56",tag:"Assessment",tc:"#14A0B4",tb:"#E3F5F8",text:"Momento ideal para DiSC o StrengthsFinder: conocer estilos individuales antes de que se formen patrones difíciles de cambiar."},
-     {ef:"Experiential",ec:"#854F0B",tag:"Experiencia",tc:"#854F0B",tb:"#FAEEDA",text:"Reto colaborativo de bajo riesgo emocional para construir contexto compartido antes que confianza profunda."}
+     {ef:"Estructural",ec:"#0F6E56",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Taller de team charter: propósito compartido, expectativas mutuas y acuerdos de trabajo desde cero."},
+     {ef:"Estructural",ec:"#0F6E56",tag:"Assessment",tc:"#14A0B4",tb:"#E3F5F8",text:"Momento ideal para DiSC o StrengthsFinder: conocer estilos individuales antes de que se formen patrones difíciles de cambiar."},
+     {ef:"Vivencial",ec:"#854F0B",tag:"Experiencia",tc:"#854F0B",tb:"#FAEEDA",text:"Reto colaborativo de bajo riesgo emocional para construir contexto compartido antes que confianza profunda."}
    ]},
   {name:"Storming",sub:"Estructura antes que armonía",ac:"#993C1D",al:"#FAECE7",ad:"#4A1B0C",
    insight:"Este equipo está en tensión activa. Esto es normal, pero necesita ser nombrado y trabajado, no ignorado con actividades recreativas.",
    recs:[
-     {ef:"Structural",ec:"#0F6E56",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Taller de estilos de conflicto (Thomas-Kilmann): dar lenguaje neutro al conflicto cambia la dinámica del equipo."},
-     {ef:"Structural",ec:"#0F6E56",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Renegociar acuerdos de trabajo. Muchos conflictos en esta etapa son síntoma de normas que nunca se establecieron."},
+     {ef:"Estructural",ec:"#0F6E56",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Taller de estilos de conflicto (Thomas-Kilmann): dar lenguaje neutro al conflicto cambia la dinámica del equipo."},
+     {ef:"Estructural",ec:"#0F6E56",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Renegociar acuerdos de trabajo. Muchos conflictos en esta etapa son síntoma de normas que nunca se establecieron."},
      {tag:"Precaución",tc:"#993C1D",tb:"#FAECE7",text:"Evita actividades puramente recreativas ahora: el equipo las vive como distracción del conflicto real."}
    ]},
   {name:"Norming",sub:"Sistemas que sostienen la confianza",ac:"#854F0B",al:"#FEF3E2",ad:"#412402",
    insight:"Este equipo se está estabilizando. Los avances son reales pero frágiles si no se codifican en normas y rituales explícitos que sobrevivan cambios de personas.",
    recs:[
-     {ef:"Structural",ec:"#0F6E56",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Taller de normas y rituales: documentar cómo trabajamos, procesos de decisión y protocolos de comunicación."},
-     {ef:"Structural",ec:"#0F6E56",tag:"Assessment",tc:"#534AB7",tb:"#E5E3FC",text:"DiSC o StrengthsFinder colectivo para ver cómo se complementan los estilos, y qué fricciones son de personalidad, no de mala fe."},
-     {ef:"Experiential",ec:"#854F0B",tag:"Experiencia",tc:"#854F0B",tb:"#FAEEDA",text:"Reto de mediana complejidad que refuerce la identidad colectiva: innovación interna, reto social o experiencia con roles cruzados."}
+     {ef:"Estructural",ec:"#0F6E56",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Taller de normas y rituales: documentar cómo trabajamos, procesos de decisión y protocolos de comunicación."},
+     {ef:"Estructural",ec:"#0F6E56",tag:"Assessment",tc:"#534AB7",tb:"#E5E3FC",text:"DiSC o StrengthsFinder colectivo para ver cómo se complementan los estilos, y qué fricciones son de personalidad, no de mala fe."},
+     {ef:"Vivencial",ec:"#854F0B",tag:"Experiencia",tc:"#854F0B",tb:"#FAEEDA",text:"Reto de mediana complejidad que refuerce la identidad colectiva: innovación interna, reto social o experiencia con roles cruzados."}
    ]},
   {name:"Performing",sub:"Reto antes que comodidad",ac:"#64B450",al:"#E1F5EE",ad:"#4A8A39",
    insight:"Este equipo ejecuta bien. El siguiente reto es pasar de rendimiento a seguridad psicológica real: donde el equipo puede decir verdades difíciles sin costo.",
    recs:[
-     {ef:"Reflective",ec:"#534AB7",tag:"Sesión de trabajo",tc:"#534AB7",tb:"#E5E3FC",text:"Feedback 360 y retrospectiva profunda: revisar patrones del equipo, no solo resultados de productividad."},
-     {ef:"Experiential",ec:"#854F0B",tag:"Experiencia",tc:"#854F0B",tb:"#FAEEDA",text:"Reto de alta complejidad con debriefing: hackathon, design sprint o simulación de crisis."},
-     {ef:"Structural",ec:"#0F6E56",tag:"Assessment",tc:"#14A0B4",tb:"#E3F5F8",text:"Working Genius (Lencioni) para identificar cómo cada persona contribuye al trabajo colectivo y dónde hay energía desperdiciada."}
+     {ef:"Reflexivo",ec:"#534AB7",tag:"Sesión de trabajo",tc:"#534AB7",tb:"#E5E3FC",text:"Feedback 360 y retrospectiva profunda: revisar patrones del equipo, no solo resultados de productividad."},
+     {ef:"Vivencial",ec:"#854F0B",tag:"Experiencia",tc:"#854F0B",tb:"#FAEEDA",text:"Reto de alta complejidad con debriefing: hackathon, design sprint o simulación de crisis."},
+     {ef:"Estructural",ec:"#0F6E56",tag:"Assessment",tc:"#14A0B4",tb:"#E3F5F8",text:"Working Genius (Lencioni) para identificar cómo cada persona contribuye al trabajo colectivo y dónde hay energía desperdiciada."}
    ]},
   {name:"High Performing",sub:"Seguridad psicológica como marcador clave",ac:"#14A0B4",al:"#E6F1FB",ad:"#0C7A8A",
    insight:"Este equipo ha alcanzado confianza y seguridad psicológica reales. El foco ahora es sostenerlo y expandir su impacto hacia otros equipos y hacia la organización.",
    recs:[
-     {ef:"Reflective",ec:"#534AB7",tag:"Sesión de trabajo",tc:"#534AB7",tb:"#E5E3FC",text:"Auditoría de seguridad psicológica (Edmondson Scale) para identificar zonas de autocensura o asimetría que aún no se ven."},
-     {ef:"Reflective",ec:"#534AB7",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Sesión de visión de legado: qué queremos que digan de este equipo en 3 años. Future-back visioning."},
-     {ef:"Multiplier",ec:"#534AB7",tag:"Proyecto",tc:"#534AB7",tb:"#E5E3FC",text:"Diseñar cómo este equipo puede servir a otros: comunidad de práctica, mentoría a equipos más jóvenes, exportar sus normas."}
+     {ef:"Reflexivo",ec:"#534AB7",tag:"Sesión de trabajo",tc:"#534AB7",tb:"#E5E3FC",text:"Auditoría de seguridad psicológica (Edmondson Scale) para identificar zonas de autocensura o asimetría que aún no se ven."},
+     {ef:"Reflexivo",ec:"#534AB7",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Sesión de visión de legado: qué queremos que digan de este equipo en 3 años. Future-back visioning."},
+     {ef:"Multiplicador",ec:"#534AB7",tag:"Proyecto",tc:"#534AB7",tb:"#E5E3FC",text:"Diseñar cómo este equipo puede servir a otros: comunidad de práctica, mentoría a equipos más jóvenes, exportar sus normas."}
    ]},
   {name:"Generative",sub:"Equipos que multiplican impacto hacia afuera",ac:"#534AB7",al:"#EEEDFE",ad:"#26215C",
    insight:"Este equipo opera más allá de sí mismo. El trabajo ahora es institucionalizar esa generatividad, documentarla y formalizarla, para que sobreviva cambios y rotaciones.",
    recs:[
-     {ef:"Multiplier",ec:"#534AB7",tag:"Proyecto",tc:"#534AB7",tb:"#E5E3FC",text:"Formalizar el rol multiplicador: programas de mentoría, playbooks de cultura o comunidades de práctica con otros equipos."},
-     {ef:"Reflective",ec:"#534AB7",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Succession y knowledge transfer: documentar el ADN del equipo para que el conocimiento no se vaya cuando se va una persona."},
-     {ef:"Connective",ec:"#185FA5",tag:"Experiencia",tc:"#14A0B4",tb:"#E3F5F8",text:"Proyecto de impacto colectivo: voluntariado significativo, colaboración con otra organización o iniciativa de transferencia de conocimiento."}
+     {ef:"Multiplicador",ec:"#534AB7",tag:"Proyecto",tc:"#534AB7",tb:"#E5E3FC",text:"Formalizar el rol multiplicador: programas de mentoría, playbooks de cultura o comunidades de práctica con otros equipos."},
+     {ef:"Reflexivo",ec:"#534AB7",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Succession y knowledge transfer: documentar el ADN del equipo para que el conocimiento no se vaya cuando se va una persona."},
+     {ef:"Conectivo",ec:"#185FA5",tag:"Experiencia",tc:"#14A0B4",tb:"#E3F5F8",text:"Proyecto de impacto colectivo: voluntariado significativo, colaboración con otra organización o iniciativa de transferencia de conocimiento."}
    ]}
 ];
+const ES_GAP_INSIGHT="Este equipo tiene fortalezas reales en cómo se relaciona y opera. Sin embargo, aún no ha construido las prácticas deliberadas que convierten esas fortalezas en algo sostenible, que funciona incluso cuando cambia la gente. Esa es exactamente la diferencia entre un equipo naturalmente bueno y uno intencionalmente desarrollado.";
 
-const GAP_INSIGHT="Este equipo tiene fortalezas reales en cómo se relaciona y opera. Sin embargo, aún no ha construido las prácticas deliberadas que convierten esas fortalezas en algo sostenible, que funciona incluso cuando cambia la gente. Esa es exactamente la diferencia entre un equipo naturalmente bueno y uno intencionalmente desarrollado.";
+const EN_STAGES=[
+  {name:"Forming",sub:"Connection before content",ac:"#888780",al:"#F1EFE8",ad:"#2C2C2A",
+   insight:"This team is in early formation. The priority is not maximum productivity but connection and clarity of shared purpose.",
+   recs:[
+     {ef:"Structural",ec:"#0F6E56",tag:"Working session",tc:"#64B450",tb:"#EBF5E6",text:"Team charter workshop: shared purpose, mutual expectations, and working agreements from scratch."},
+     {ef:"Structural",ec:"#0F6E56",tag:"Assessment",tc:"#14A0B4",tb:"#E3F5F8",text:"Ideal moment for DiSC or StrengthsFinder: learn individual styles before patterns that are hard to change form."},
+     {ef:"Experiential",ec:"#854F0B",tag:"Experience",tc:"#854F0B",tb:"#FAEEDA",text:"Low emotional-risk collaborative challenge to build shared context before deep trust."}
+   ]},
+  {name:"Storming",sub:"Structure before harmony",ac:"#993C1D",al:"#FAECE7",ad:"#4A1B0C",
+   insight:"This team is in active tension. This is normal, but it needs to be named and worked through, not ignored with recreational activities.",
+   recs:[
+     {ef:"Structural",ec:"#0F6E56",tag:"Working session",tc:"#64B450",tb:"#EBF5E6",text:"Conflict styles workshop (Thomas-Kilmann): giving neutral language to conflict changes team dynamics."},
+     {ef:"Structural",ec:"#0F6E56",tag:"Working session",tc:"#64B450",tb:"#EBF5E6",text:"Renegotiate working agreements. Many conflicts at this stage are symptoms of norms that were never established."},
+     {tag:"Caution",tc:"#993C1D",tb:"#FAECE7",text:"Avoid purely recreational activities now: the team experiences them as a distraction from the real conflict."}
+   ]},
+  {name:"Norming",sub:"Systems that sustain trust",ac:"#854F0B",al:"#FEF3E2",ad:"#412402",
+   insight:"This team is stabilizing. Progress is real but fragile if not codified in explicit norms and rituals that survive changes in people.",
+   recs:[
+     {ef:"Structural",ec:"#0F6E56",tag:"Working session",tc:"#64B450",tb:"#EBF5E6",text:"Norms and rituals workshop: document how we work, decision processes, and communication protocols."},
+     {ef:"Structural",ec:"#0F6E56",tag:"Assessment",tc:"#534AB7",tb:"#E5E3FC",text:"Collective DiSC or StrengthsFinder to see how styles complement each other and what frictions are personality, not bad faith."},
+     {ef:"Experiential",ec:"#854F0B",tag:"Experience",tc:"#854F0B",tb:"#FAEEDA",text:"Mid-complexity challenge that reinforces collective identity: internal innovation, social challenge, or cross-role experience."}
+   ]},
+  {name:"Performing",sub:"Challenge before comfort",ac:"#64B450",al:"#E1F5EE",ad:"#4A8A39",
+   insight:"This team executes well. The next challenge is moving from performance to real psychological safety: where the team can say difficult truths without cost.",
+   recs:[
+     {ef:"Reflective",ec:"#534AB7",tag:"Working session",tc:"#534AB7",tb:"#E5E3FC",text:"360 feedback and deep retrospective: reviewing team patterns, not just productivity results."},
+     {ef:"Experiential",ec:"#854F0B",tag:"Experience",tc:"#854F0B",tb:"#FAEEDA",text:"High-complexity challenge with debrief: hackathon, design sprint, or crisis simulation."},
+     {ef:"Structural",ec:"#0F6E56",tag:"Assessment",tc:"#14A0B4",tb:"#E3F5F8",text:"Working Genius (Lencioni) to identify how each person contributes to collective work and where energy is wasted."}
+   ]},
+  {name:"High Performing",sub:"Psychological safety as the key marker",ac:"#14A0B4",al:"#E6F1FB",ad:"#0C7A8A",
+   insight:"This team has achieved real trust and psychological safety. The focus now is sustaining it and expanding its impact to other teams and the organization.",
+   recs:[
+     {ef:"Reflective",ec:"#534AB7",tag:"Working session",tc:"#534AB7",tb:"#E5E3FC",text:"Psychological safety audit (Edmondson Scale) to identify zones of self-censorship or asymmetry not yet visible."},
+     {ef:"Reflective",ec:"#534AB7",tag:"Working session",tc:"#64B450",tb:"#EBF5E6",text:"Legacy vision session: what do we want others to say about this team in 3 years? Future-back visioning."},
+     {ef:"Multiplier",ec:"#534AB7",tag:"Project",tc:"#534AB7",tb:"#E5E3FC",text:"Design how this team can serve others: community of practice, mentoring younger teams, exporting its norms."}
+   ]},
+  {name:"Generative",sub:"Teams that multiply impact outward",ac:"#534AB7",al:"#EEEDFE",ad:"#26215C",
+   insight:"This team operates beyond itself. The work now is to institutionalize that generativity so it survives changes and rotations.",
+   recs:[
+     {ef:"Multiplier",ec:"#534AB7",tag:"Project",tc:"#534AB7",tb:"#E5E3FC",text:"Formalize the multiplier role: mentoring programs, culture playbooks, or communities of practice with other teams."},
+     {ef:"Reflective",ec:"#534AB7",tag:"Working session",tc:"#64B450",tb:"#EBF5E6",text:"Succession and knowledge transfer: document the team's DNA so knowledge doesn't leave when people do."},
+     {ef:"Connective",ec:"#185FA5",tag:"Experience",tc:"#14A0B4",tb:"#E3F5F8",text:"Collective impact project: meaningful volunteering, collaboration with another organization, or knowledge transfer initiative."}
+   ]}
+];
+const EN_GAP_INSIGHT="This team has real strengths in how it relates and operates. However, it has not yet built the deliberate practices that turn those strengths into something sustainable when people change. That's the difference between a naturally good team and an intentionally developed one.";
+
+// ── LANGUAGE SETUP ────────────────────────────────────────────────────────────
+let lang='es';
+let Qs=ES_QS, Ps=ES_PS, DIMS=ES_DIMS, BLOCKERS=ES_BLOCKERS, STAGES=ES_STAGES, GAP_INSIGHT=ES_GAP_INSIGHT;
+
+const UI={
+  es:{
+    introTitle:'Diagnóstico de equipo',
+    introSub1:'Descubre en qué etapa está tu equipo y qué necesita para avanzar.',
+    introSub2:'12 preguntas sobre cómo opera tu equipo y 5 sobre las prácticas que ha construido. Menos de 5 minutos.',
+    introNote:'Responde como líder o responsable del equipo, basándote en lo que observas en tu gente, no en cómo te sientes tú personalmente. No hay respuestas correctas o incorrectas: lo que importa es la realidad actual, no el ideal.',
+    labelName:'Tu nombre',labelOrg:'Organización',labelTeam:'Equipo o departamento',labelTeamNote:'(si aplica)',
+    btnStart:'Comenzar diagnóstico →',btnBack:'← Atrás',
+    qLabel:(n,t)=>`Pregunta ${n} de ${t}`,scaleL:'Casi nunca',scaleR:'Siempre',
+    pracTitle:'Segunda parte · Prácticas del equipo',
+    pracNote:'Ahora, preguntas sobre lo que el equipo ha hecho, no cómo se siente, sino qué existe o qué ha ocurrido.',
+    btnYes:'Sí',btnPartial:'Parcial',btnNo:'No',btnResults:'Ver resultados →',
+    cardDims:'Perfil de dimensiones',critFactor:'Factor crítico',
+    nextTitle:'Próximos pasos recomendados',
+    nextDesc:'Algunas intervenciones que pueden apoyar el avance de tu equipo. No son las únicas, son un punto de partida.',
+    emailLabel:'Recibe tu resultado por email',emailPh:'Ej: maria@empresa.com',
+    btnConv:'Conversemos →',btnSend:'Enviar PDF al email →',btnSending:'Enviando...',btnSent:'✓ Enviado',btnErr:'Error — intenta de nuevo',
+    contactNote:'O escríbenos a',btnRestart:'Volver a empezar',
+    footer:'CenterPoint · Team Development Model',pdfFilename:'CenterPoint_Diagnostico',
+  },
+  en:{
+    introTitle:'Team diagnostic',
+    introSub1:'Discover what stage your team is in and what it needs to move forward.',
+    introSub2:'12 questions about how your team operates and 5 about the practices it has built. Under 5 minutes.',
+    introNote:'Answer as the team leader or manager, based on what you observe in your people — not how you personally feel. There are no right or wrong answers: what matters is current reality, not the ideal.',
+    labelName:'Your name',labelOrg:'Organization',labelTeam:'Team or department',labelTeamNote:'(if applicable)',
+    btnStart:'Start diagnostic →',btnBack:'← Back',
+    qLabel:(n,t)=>`Question ${n} of ${t}`,scaleL:'Almost never',scaleR:'Always',
+    pracTitle:'Part two · Team practices',
+    pracNote:"Now, questions about what the team has done — not how it feels, but what exists or has happened.",
+    btnYes:'Yes',btnPartial:'Partial',btnNo:'No',btnResults:'See results →',
+    cardDims:'Dimension profile',critFactor:'Critical factor',
+    nextTitle:'Recommended next steps',
+    nextDesc:"Some interventions that can support your team's progress. These are not the only options — they are a starting point.",
+    emailLabel:'Receive your results by email',emailPh:'e.g. maria@company.com',
+    btnConv:"Let's talk →",btnSend:'Send PDF by email →',btnSending:'Sending...',btnSent:'✓ Sent',btnErr:'Error — try again',
+    contactNote:'Or write to us at',btnRestart:'Start over',
+    footer:'CenterPoint · Team Development Model',pdfFilename:'CenterPoint_TeamDiagnostic',
+  }
+};
+
+function setLang(l){
+  lang=l;
+  Qs=l==='en'?EN_QS:ES_QS; Ps=l==='en'?EN_PS:ES_PS;
+  DIMS=l==='en'?EN_DIMS:ES_DIMS; BLOCKERS=l==='en'?EN_BLOCKERS:ES_BLOCKERS;
+  STAGES=l==='en'?EN_STAGES:ES_STAGES; GAP_INSIGHT=l==='en'?EN_GAP_INSIGHT:ES_GAP_INSIGHT;
+  document.documentElement.lang=l;
+  cur=-1;ans=[];pracAns=[];userName='';companyName='';teamName='';showingResults=false;
+  render();
+}
 
 let cur=-1, ans=[], pracAns=[], userName='', companyName='', teamName='', showingResults=false;
 
@@ -355,28 +496,35 @@ function generatePDF(){
 
 function render(){
   const app=document.getElementById('app');
+  const U=UI[lang];
   const totalQ=Qs.length+1;
 
   if(cur===-1){
     app.innerHTML=`<div class="screen on">
-      <div class="intro-logo"><img src="cp-logo.png" style="height:38px;display:block"></div>
-      <div class="intro-title">Diagnóstico de equipo</div>
-      <div class="intro-sub">Descubre en qué etapa está tu equipo y qué necesita para avanzar.</div>
-      <div class="intro-sub" style="font-size:12.5px;margin-top:-6px">12 preguntas sobre cómo opera tu equipo y 5 sobre las prácticas que ha construido. Menos de 5 minutos.</div>
-      <div class="intro-note">Responde como líder o responsable del equipo, basándote en lo que observas en tu gente, no en cómo te sientes tú personalmente. No hay respuestas correctas o incorrectas: lo que importa es la realidad actual, no el ideal.</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+        <div class="intro-logo"><img src="cp-logo.png" style="height:38px;display:block"></div>
+        <div class="lang-toggle">
+          <button class="lang-btn${lang==='es'?' active':''}" onclick="setLang('es')">ES</button>
+          <button class="lang-btn${lang==='en'?' active':''}" onclick="setLang('en')">EN</button>
+        </div>
+      </div>
+      <div class="intro-title">${U.introTitle}</div>
+      <div class="intro-sub">${U.introSub1}</div>
+      <div class="intro-sub" style="font-size:12.5px;margin-top:-6px">${U.introSub2}</div>
+      <div class="intro-note">${U.introNote}</div>
       <div class="field-group">
-        <div class="field-label">Tu nombre</div>
+        <div class="field-label">${U.labelName}</div>
         <input class="field-input" id="f-name" type="text" placeholder="" autocomplete="name">
       </div>
       <div class="field-group">
-        <div class="field-label">Organización</div>
+        <div class="field-label">${U.labelOrg}</div>
         <input class="field-input" id="f-company" type="text" placeholder="">
       </div>
       <div class="field-group">
-        <div class="field-label">Equipo o departamento <span style="font-weight:400;color:var(--t3)">(si aplica)</span></div>
+        <div class="field-label">${U.labelTeam} <span style="font-weight:400;color:var(--t3)">${U.labelTeamNote}</span></div>
         <input class="field-input" id="f-team" type="text" placeholder="">
       </div>
-      <button class="start-btn" style="background:#64B450" onclick="start()">Comenzar diagnóstico →</button>
+      <button class="start-btn" style="background:#64B450" onclick="start()">${U.btnStart}</button>
     </div>`;
 
   } else if(cur<Qs.length){
@@ -384,11 +532,11 @@ function render(){
     const pctW=Math.round(cur/totalQ*100)+'%';
     const d=DIMS[q.dim];
     app.innerHTML=`<div class="screen on">
-      <button class="back-btn" onclick="goBack()">&#8592; Atrás</button>
+      <button class="back-btn" onclick="goBack()">${U.btnBack}</button>
       <div class="prog-wrap"><div class="prog-fill" style="width:${pctW};background:#64B450"></div></div>
-      <div class="q-meta">Pregunta ${cur+1} de ${Qs.length} <span class="q-dim-badge" style="background:${d.bg};color:${d.color}">${d.label}</span></div>
+      <div class="q-meta">${U.qLabel(cur+1,Qs.length)} <span class="q-dim-badge" style="background:${d.bg};color:${d.color}">${d.label}</span></div>
       <div class="q-text">${q.q}</div>
-      <div class="scale-ends"><span>Casi nunca</span><span>Siempre</span></div>
+      <div class="scale-ends"><span>${U.scaleL}</span><span>${U.scaleR}</span></div>
       <div class="scale-btns">${[1,2,3,4,5].map(v=>`<button class="sbtn" id="b${v}" onclick="pick(${v})">${v}</button>`).join('')}</div>
     </div>`;
 
@@ -401,26 +549,27 @@ function render(){
         <td class="prac-num">${i+1}</td>
         <td class="prac-q">${q}</td>
         <td class="prac-btns-cell">
-          <button class="pbtn${val===3?' sel':''}" onclick="setPrac(${i},3)">Sí</button>
-          <button class="pbtn${val===2?' sel':''}" onclick="setPrac(${i},2)">Parcial</button>
-          <button class="pbtn${val===1?' sel':''}" onclick="setPrac(${i},1)">No</button>
+          <button class="pbtn${val===3?' sel':''}" onclick="setPrac(${i},3)">${U.btnYes}</button>
+          <button class="pbtn${val===2?' sel':''}" onclick="setPrac(${i},2)">${U.btnPartial}</button>
+          <button class="pbtn${val===1?' sel':''}" onclick="setPrac(${i},1)">${U.btnNo}</button>
         </td>
       </tr>`;
     }).join('');
 
     app.innerHTML=`<div class="screen on">
-      <button class="back-btn" onclick="goBack()">&#8592; Atrás</button>
+      <button class="back-btn" onclick="goBack()">${U.btnBack}</button>
       <div class="prog-wrap"><div class="prog-fill" style="width:${pctW};background:#64B450"></div></div>
-      <div class="prac-screen-title">Segunda parte · Prácticas del equipo</div>
-      <div class="prac-screen-note">Ahora, preguntas sobre lo que el equipo ha hecho, no cómo se siente, sino qué existe o qué ha ocurrido.</div>
+      <div class="prac-screen-title">${U.pracTitle}</div>
+      <div class="prac-screen-note">${U.pracNote}</div>
       <table class="prac-table"><tbody>${rows}</tbody></table>
-      <button class="start-btn" id="ver-btn" style="background:${answered?'#64B450':'#ccc'};margin-top:20px" onclick="verResultados()" ${answered?'':'disabled'}>Ver resultados →</button>
+      <button class="start-btn" id="ver-btn" style="background:${answered?'#64B450':'#ccc'};margin-top:20px" onclick="verResultados()" ${answered?'':'disabled'}>${U.btnResults}</button>
     </div>`;
   }
 }
 
 function renderResultados(){
   const app=document.getElementById('app');
+  const U=UI[lang];
   const s=scores();
   const si=getStage(s);
   const st=STAGES[si];
@@ -429,7 +578,7 @@ function renderResultados(){
   const bld=DIMS[bl];
   const displayName=[companyName,teamName].filter(Boolean).join(' · ');
   app.innerHTML=`<div class="screen on">
-    <button class="back-btn" onclick="goBack()">&#8592; Atrás</button>
+    <button class="back-btn" onclick="goBack()">${U.btnBack}</button>
     <div style="margin-bottom:16px">
       ${displayName?`<div style="font-size:11px;color:var(--t3);margin-bottom:6px;font-weight:500;text-transform:uppercase;letter-spacing:.04em">${displayName}</div>`:''}
       <span class="res-badge" style="background:${st.al};color:${st.ad}">0${si+1} · ${st.name}</span>
@@ -439,19 +588,19 @@ function renderResultados(){
       ${gapped?`<div class="res-gap">${GAP_INSIGHT}</div>`:''}
     </div>
     <div class="card">
-      <div class="card-title">Perfil de dimensiones</div>
+      <div class="card-title">${U.cardDims}</div>
       ${Object.entries(s).map(([k,v])=>{const d=DIMS[k];return`<div class="dim-row">
         <div class="dim-hd"><span class="dim-lbl">${d.label}</span><span class="dim-sc">${v.toFixed(1)} / 5</span></div>
         <div class="dim-bg"><div class="dim-fill" id="df-${k}" style="width:0;background:${d.color}"></div></div>
       </div>`;}).join('')}
     </div>
     <div class="blocker-card" style="background:${bld.bg};border-color:${bld.color}">
-      <div class="blocker-label" style="color:${bld.color}">Factor crítico · ${bld.label}</div>
+      <div class="blocker-label" style="color:${bld.color}">${U.critFactor} · ${bld.label}</div>
       <div class="blocker-text" style="color:${bld.color}">${BLOCKERS[bl]}</div>
     </div>
     <div class="card">
-      <div class="card-title">Próximos pasos recomendados</div>
-      <div style="font-size:12px;color:var(--t3);margin-bottom:10px">Algunas intervenciones que pueden apoyar el avance de tu equipo. No son las únicas, son un punto de partida.</div>
+      <div class="card-title">${U.nextTitle}</div>
+      <div style="font-size:12px;color:var(--t3);margin-bottom:10px">${U.nextDesc}</div>
       ${st.recs.map(r=>`<div class="rec-item">
         <div class="rec-badges">
           ${r.ef?`<span class="rec-ef" style="color:${r.ec};border-color:${r.ec}">${r.ef}</span>`:''}
@@ -461,16 +610,16 @@ function renderResultados(){
       </div>`).join('')}
     </div>
     <div class="field-group" style="margin-top:20px">
-      <div class="field-label">Recibe tu resultado por email</div>
-      <input class="field-input" id="res-email" type="email" placeholder="Ej: maria@empresa.com" autocomplete="email">
+      <div class="field-label">${U.emailLabel}</div>
+      <input class="field-input" id="res-email" type="email" placeholder="${U.emailPh}" autocomplete="email">
     </div>
     <div class="btn-row">
-      <button class="cta-btn" style="background:${st.ac}">Conversemos →</button>
-      <button class="pdf-btn" id="pdf-btn" onclick="enviarPDF()">Enviar PDF al email →</button>
+      <a href="https://calendly.com/connect-centerpointpr/new-meeting" target="_blank" rel="noopener" class="cta-btn" style="background:${st.ac};text-decoration:none;display:flex;align-items:center;justify-content:center">${U.btnConv}</a>
+      <button class="pdf-btn" id="pdf-btn" onclick="enviarPDF()">${U.btnSend}</button>
     </div>
-    <div style="text-align:center;font-size:12px;color:var(--t3);margin-top:6px">O escríbenos a <a href="mailto:connect@centerpointpr.com" style="color:var(--t3)">connect@centerpointpr.com</a></div>
-    <button class="restart-btn" onclick="restart()">Volver a empezar</button>
-    <div class="footer">CenterPoint · Team Development Model</div>
+    <div style="text-align:center;font-size:12px;color:var(--t3);margin-top:6px">${U.contactNote} <a href="mailto:connect@centerpointpr.com" style="color:var(--t3)">connect@centerpointpr.com</a></div>
+    <button class="restart-btn" onclick="restart()">${U.btnRestart}</button>
+    <div class="footer">${U.footer}</div>
   </div>`;
   setTimeout(()=>{
     Object.entries(s).forEach(([k,v])=>{
@@ -496,11 +645,12 @@ function saveDiagnostic(s, si, st, gapped){
   }).catch(()=>{});
 }
 function enviarPDF(){
+  const U=UI[lang];
   const emailEl=document.getElementById('res-email');
   const email=(emailEl?.value||'').trim();
   if(!email||!email.includes('@')){emailEl?.focus();return;}
   const btn=document.getElementById('pdf-btn');
-  btn.textContent='Enviando...';btn.disabled=true;
+  btn.textContent=U.btnSending;btn.disabled=true;
   const s=scores();
   const si=getStage(s);
   const st=STAGES[si];
@@ -519,15 +669,16 @@ function enviarPDF(){
       gapped: isGapped(s),
       responses: ans,
       pracResponses: pracAns,
-      action: 'email'
+      action: 'email',
+      lang: lang
     })
   })
   .then(r=>r.json())
   .then(d=>{
-    if(d.ok){btn.textContent='✓ Enviado';btn.style.cssText='background:#64B450;color:#fff;border-color:#64B450;cursor:default';}
-    else{btn.textContent='Error — intenta de nuevo';btn.disabled=false;}
+    if(d.ok){btn.textContent=U.btnSent;btn.style.cssText='background:#64B450;color:#fff;border-color:#64B450;cursor:default';}
+    else{btn.textContent=U.btnErr;btn.disabled=false;}
   })
-  .catch(()=>{btn.textContent='Error — intenta de nuevo';btn.disabled=false;});
+  .catch(()=>{btn.textContent=U.btnErr;btn.disabled=false;});
 }
 function start(){
   userName=document.getElementById('f-name')?.value.trim()||'';
