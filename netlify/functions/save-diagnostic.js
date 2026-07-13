@@ -306,7 +306,16 @@ exports.handler = async (event) => {
         body: JSON.stringify({
           parent: { database_id: NOTION_DB },
           properties: {
-            title: { title: [{ type: 'text', text: { content: [name, org].filter(Boolean).join(' · ') || 'Anónimo · ' + date } }] },
+            title: { title: [{ type: 'text', text: { content: name || 'Anónimo · ' + date } }] },
+            ...(org ? { 'Organización': { rich_text: [{ type: 'text', text: { content: org } }] } } : {}),
+            ...(email ? { 'Email': { email } } : {}),
+            ...(stage ? { 'Etapa': { select: { name: stage } } } : {}),
+            'Confianza':              { number: scores.trust    ? parseFloat(parseFloat(scores.trust).toFixed(1))    : null },
+            'Gestión del conflicto':  { number: scores.conflict ? parseFloat(parseFloat(scores.conflict).toFixed(1)) : null },
+            'Claridad':               { number: scores.clarity  ? parseFloat(parseFloat(scores.clarity).toFixed(1))  : null },
+            'Pertenencia':            { number: scores.cohesion ? parseFloat(parseFloat(scores.cohesion).toFixed(1)) : null },
+            'Seguridad psicológica':  { number: scores.psafety  ? parseFloat(parseFloat(scores.psafety).toFixed(1))  : null },
+            'Orientación externa':    { number: scores.impact   ? parseFloat(parseFloat(scores.impact).toFixed(1))   : null },
           },
           children: blocks,
         }),
