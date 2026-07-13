@@ -238,7 +238,7 @@ exports.handler = async (event) => {
         headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
         body: JSON.stringify({ name: name || null, org: org || null, email: email || null, stage, stage_index: stageIndex, scores, responses: responses || null, prac_responses: pracResponses || null, created_at: new Date().toISOString() }),
       });
-      if (!res.ok) errors.push('Supabase: ' + res.status + ' ' + await res.text());
+      if (!res.ok) { const t = await res.text(); console.error('Supabase error:', res.status, t); errors.push('Supabase: ' + res.status + ' ' + t); }
     } catch (err) { errors.push('Supabase: ' + err.message); }
   }
 
