@@ -53,6 +53,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .rec-item{padding:10px 0;border-bottom:0.5px solid var(--b1);font-size:12.5px;line-height:1.6;color:var(--t1);display:flex;gap:9px;align-items:flex-start}
 .rec-item:last-child{border-bottom:none}
 .rec-tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.rec-ef{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0;margin-top:2px;border:1.5px solid;background:transparent}
+.rec-badges{display:flex;flex-direction:column;gap:4px;flex-shrink:0}
 .btn-row{display:flex;gap:8px;margin-top:4px}
 .cta-btn{flex:1;padding:13px;border-radius:var(--r);border:none;font-family:inherit;font-size:13.5px;font-weight:500;cursor:pointer;color:#fff;transition:opacity .15s}
 .cta-btn:hover{opacity:.86}
@@ -128,44 +130,44 @@ const STAGES=[
   {name:"Forming",sub:"Conexión antes que contenido",ac:"#888780",al:"#F1EFE8",ad:"#2C2C2A",
    insight:"Este equipo está en construcción inicial. La prioridad no es la productividad máxima sino la conexión y la claridad de propósito compartido.",
    recs:[
-     {tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Taller de team charter: propósito compartido, expectativas mutuas y acuerdos de trabajo desde cero."},
-     {tag:"Assessment",tc:"#14A0B4",tb:"#E3F5F8",text:"Momento ideal para DiSC o StrengthsFinder: conocer estilos individuales antes de que se formen patrones difíciles de cambiar."},
-     {tag:"Experiencia",tc:"#854F0B",tb:"#FAEEDA",text:"Reto colaborativo de bajo riesgo emocional para construir contexto compartido antes que confianza profunda."}
+     {ef:"Structural",ec:"#0F6E56",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Taller de team charter: propósito compartido, expectativas mutuas y acuerdos de trabajo desde cero."},
+     {ef:"Structural",ec:"#0F6E56",tag:"Assessment",tc:"#14A0B4",tb:"#E3F5F8",text:"Momento ideal para DiSC o StrengthsFinder: conocer estilos individuales antes de que se formen patrones difíciles de cambiar."},
+     {ef:"Experiential",ec:"#854F0B",tag:"Experiencia",tc:"#854F0B",tb:"#FAEEDA",text:"Reto colaborativo de bajo riesgo emocional para construir contexto compartido antes que confianza profunda."}
    ]},
   {name:"Storming",sub:"Estructura antes que armonía",ac:"#993C1D",al:"#FAECE7",ad:"#4A1B0C",
    insight:"Este equipo está en tensión activa. Esto es normal, pero necesita ser nombrado y trabajado, no ignorado con actividades recreativas.",
    recs:[
-     {tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Taller de estilos de conflicto (Thomas-Kilmann): dar lenguaje neutro al conflicto cambia la dinámica del equipo."},
-     {tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Renegociar acuerdos de trabajo. Muchos conflictos en esta etapa son síntoma de normas que nunca se establecieron."},
+     {ef:"Structural",ec:"#0F6E56",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Taller de estilos de conflicto (Thomas-Kilmann): dar lenguaje neutro al conflicto cambia la dinámica del equipo."},
+     {ef:"Structural",ec:"#0F6E56",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Renegociar acuerdos de trabajo. Muchos conflictos en esta etapa son síntoma de normas que nunca se establecieron."},
      {tag:"Precaución",tc:"#993C1D",tb:"#FAECE7",text:"Evita actividades puramente recreativas ahora: el equipo las vive como distracción del conflicto real."}
    ]},
   {name:"Norming",sub:"Sistemas que sostienen la confianza",ac:"#854F0B",al:"#FEF3E2",ad:"#412402",
    insight:"Este equipo se está estabilizando. Los avances son reales pero frágiles si no se codifican en normas y rituales explícitos que sobrevivan cambios de personas.",
    recs:[
-     {tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Taller de normas y rituales: documentar cómo trabajamos, procesos de decisión y protocolos de comunicación."},
-     {tag:"Assessment",tc:"#534AB7",tb:"#E5E3FC",text:"DiSC o StrengthsFinder colectivo para ver cómo se complementan los estilos, y qué fricciones son de personalidad, no de mala fe."},
-     {tag:"Experiencia",tc:"#854F0B",tb:"#FAEEDA",text:"Reto de mediana complejidad que refuerce la identidad colectiva: innovación interna, reto social o experiencia con roles cruzados."}
+     {ef:"Structural",ec:"#0F6E56",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Taller de normas y rituales: documentar cómo trabajamos, procesos de decisión y protocolos de comunicación."},
+     {ef:"Structural",ec:"#0F6E56",tag:"Assessment",tc:"#534AB7",tb:"#E5E3FC",text:"DiSC o StrengthsFinder colectivo para ver cómo se complementan los estilos, y qué fricciones son de personalidad, no de mala fe."},
+     {ef:"Experiential",ec:"#854F0B",tag:"Experiencia",tc:"#854F0B",tb:"#FAEEDA",text:"Reto de mediana complejidad que refuerce la identidad colectiva: innovación interna, reto social o experiencia con roles cruzados."}
    ]},
   {name:"Performing",sub:"Reto antes que comodidad",ac:"#64B450",al:"#E1F5EE",ad:"#4A8A39",
    insight:"Este equipo ejecuta bien. El siguiente reto es pasar de rendimiento a seguridad psicológica real: donde el equipo puede decir verdades difíciles sin costo.",
    recs:[
-     {tag:"Sesión de trabajo",tc:"#534AB7",tb:"#E5E3FC",text:"Feedback 360 y retrospectiva profunda: revisar patrones del equipo, no solo resultados de productividad."},
-     {tag:"Experiencia",tc:"#854F0B",tb:"#FAEEDA",text:"Reto de alta complejidad con debriefing: hackathon, design sprint o simulación de crisis."},
-     {tag:"Assessment",tc:"#14A0B4",tb:"#E3F5F8",text:"Working Genius (Lencioni) para identificar cómo cada persona contribuye al trabajo colectivo y dónde hay energía desperdiciada."}
+     {ef:"Reflective",ec:"#534AB7",tag:"Sesión de trabajo",tc:"#534AB7",tb:"#E5E3FC",text:"Feedback 360 y retrospectiva profunda: revisar patrones del equipo, no solo resultados de productividad."},
+     {ef:"Experiential",ec:"#854F0B",tag:"Experiencia",tc:"#854F0B",tb:"#FAEEDA",text:"Reto de alta complejidad con debriefing: hackathon, design sprint o simulación de crisis."},
+     {ef:"Structural",ec:"#0F6E56",tag:"Assessment",tc:"#14A0B4",tb:"#E3F5F8",text:"Working Genius (Lencioni) para identificar cómo cada persona contribuye al trabajo colectivo y dónde hay energía desperdiciada."}
    ]},
   {name:"High Performing",sub:"Seguridad psicológica como marcador clave",ac:"#14A0B4",al:"#E6F1FB",ad:"#0C7A8A",
    insight:"Este equipo ha alcanzado confianza y seguridad psicológica reales. El foco ahora es sostenerlo y expandir su impacto hacia otros equipos y hacia la organización.",
    recs:[
-     {tag:"Sesión de trabajo",tc:"#534AB7",tb:"#E5E3FC",text:"Auditoría de seguridad psicológica (Edmondson Scale) para identificar zonas de autocensura o asimetría que aún no se ven."},
-     {tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Sesión de visión de legado: qué queremos que digan de este equipo en 3 años. Future-back visioning."},
-     {tag:"Proyecto",tc:"#534AB7",tb:"#E5E3FC",text:"Diseñar cómo este equipo puede servir a otros: comunidad de práctica, mentoría a equipos más jóvenes, exportar sus normas."}
+     {ef:"Reflective",ec:"#534AB7",tag:"Sesión de trabajo",tc:"#534AB7",tb:"#E5E3FC",text:"Auditoría de seguridad psicológica (Edmondson Scale) para identificar zonas de autocensura o asimetría que aún no se ven."},
+     {ef:"Reflective",ec:"#534AB7",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Sesión de visión de legado: qué queremos que digan de este equipo en 3 años. Future-back visioning."},
+     {ef:"Multiplier",ec:"#534AB7",tag:"Proyecto",tc:"#534AB7",tb:"#E5E3FC",text:"Diseñar cómo este equipo puede servir a otros: comunidad de práctica, mentoría a equipos más jóvenes, exportar sus normas."}
    ]},
   {name:"Generative",sub:"Equipos que multiplican impacto hacia afuera",ac:"#534AB7",al:"#EEEDFE",ad:"#26215C",
    insight:"Este equipo opera más allá de sí mismo. El trabajo ahora es institucionalizar esa generatividad, documentarla y formalizarla, para que sobreviva cambios y rotaciones.",
    recs:[
-     {tag:"Proyecto",tc:"#534AB7",tb:"#E5E3FC",text:"Formalizar el rol multiplicador: programas de mentoría, playbooks de cultura o comunidades de práctica con otros equipos."},
-     {tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Succession y knowledge transfer: documentar el ADN del equipo para que el conocimiento no se vaya cuando se va una persona."},
-     {tag:"Experiencia",tc:"#14A0B4",tb:"#E3F5F8",text:"Proyecto de impacto colectivo: voluntariado significativo, colaboración con otra organización o iniciativa de transferencia de conocimiento."}
+     {ef:"Multiplier",ec:"#534AB7",tag:"Proyecto",tc:"#534AB7",tb:"#E5E3FC",text:"Formalizar el rol multiplicador: programas de mentoría, playbooks de cultura o comunidades de práctica con otros equipos."},
+     {ef:"Reflective",ec:"#534AB7",tag:"Sesión de trabajo",tc:"#64B450",tb:"#EBF5E6",text:"Succession y knowledge transfer: documentar el ADN del equipo para que el conocimiento no se vaya cuando se va una persona."},
+     {ef:"Connective",ec:"#185FA5",tag:"Experiencia",tc:"#14A0B4",tb:"#E3F5F8",text:"Proyecto de impacto colectivo: voluntariado significativo, colaboración con otra organización o iniciativa de transferencia de conocimiento."}
    ]}
 ];
 
@@ -451,7 +453,10 @@ function renderResultados(){
       <div class="card-title">Próximos pasos recomendados</div>
       <div style="font-size:12px;color:var(--t3);margin-bottom:10px">Algunas intervenciones que pueden apoyar el avance de tu equipo. No son las únicas, son un punto de partida.</div>
       ${st.recs.map(r=>`<div class="rec-item">
-        <span class="rec-tag" style="background:${r.tb};color:${r.tc}">${r.tag}</span>
+        <div class="rec-badges">
+          ${r.ef?`<span class="rec-ef" style="color:${r.ec};border-color:${r.ec}">${r.ef}</span>`:''}
+          <span class="rec-tag" style="background:${r.tb};color:${r.tc}">${r.tag}</span>
+        </div>
         <span>${r.text}</span>
       </div>`).join('')}
     </div>
