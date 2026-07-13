@@ -505,6 +505,8 @@ function enviarPDF(){
     body:JSON.stringify({
       name: userName||null,
       org: [companyName,teamName].filter(Boolean).join(' · ')||null,
+      company: companyName||null,
+      team: teamName||null,
       email: email,
       stage: st.name,
       stageIndex: si,

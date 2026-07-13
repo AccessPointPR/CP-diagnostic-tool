@@ -227,7 +227,7 @@ exports.handler = async (event) => {
   try { payload = JSON.parse(event.body); }
   catch { return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON' }) }; }
 
-  const { name, org, email, stage, stageIndex, scores, gapped, action, responses, pracResponses } = payload;
+  const { name, org, company, team, email, stage, stageIndex, scores, gapped, action, responses, pracResponses } = payload;
   const errors = [];
 
   // 1. Save to Supabase (always)
@@ -307,7 +307,8 @@ exports.handler = async (event) => {
           parent: { database_id: NOTION_DB },
           properties: {
             title: { title: [{ type: 'text', text: { content: name || 'Anónimo · ' + date } }] },
-            ...(org ? { 'Organización': { rich_text: [{ type: 'text', text: { content: org } }] } } : {}),
+            ...(company ? { 'Organización': { rich_text: [{ type: 'text', text: { content: company } }] } } : {}),
+            ...(team ? { 'Equipo o Departamento': { rich_text: [{ type: 'text', text: { content: team } }] } } : {}),
             ...(email ? { 'Email': { email } } : {}),
             ...(stage ? { 'Etapa': { select: { name: stage } } } : {}),
             'Confianza':              { number: scores.trust    ? parseFloat(parseFloat(scores.trust).toFixed(1))    : null },
