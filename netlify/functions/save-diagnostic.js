@@ -244,7 +244,7 @@ exports.handler = async (event) => {
 
   // 2. Create Notion page
   const NOTION_KEY = process.env.NOTION_API_KEY;
-  const NOTION_DB = process.env.NOTION_DATABASE_ID || '39c016076b0e80aba557d994ae4f192d';
+  const NOTION_DB = process.env.NOTION_DATABASE_ID || '39c016076b0e808e9f22f0368e5f290e';
   if (NOTION_KEY) {
     try {
       const QS_LABELS = [
