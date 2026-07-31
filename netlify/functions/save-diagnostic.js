@@ -44,7 +44,7 @@ const ES_STAGES = [
     insight: 'Este equipo está en construcción inicial. La prioridad no es la productividad máxima sino la conexión y la claridad de propósito compartido.',
     recs: [
       { ef: 'Estructural', ec: '#0F6E56', tag: 'Sesión de trabajo', tc: '#64B450', tb: '#EBF5E6', text: 'Taller de team charter: propósito compartido, expectativas mutuas y acuerdos de trabajo desde cero.' },
-      { ef: 'Estructural', ec: '#0F6E56', tag: 'Assessment',        tc: '#14A0B4', tb: '#E3F5F8', text: 'Momento ideal para DiSC o StrengthsFinder: conocer estilos individuales antes de que se formen patrones difíciles de cambiar.' },
+      { ef: 'Estructural', ec: '#0F6E56', tag: 'Assessment',        tc: '#14A0B4', tb: '#E3F5F8', text: 'Conocer los estilos individuales del equipo antes de que se formen patrones difíciles de cambiar. Ej: DiSC o StrengthsFinder.' },
       { ef: 'Vivencial',   ec: '#854F0B', tag: 'Experiencia',       tc: '#854F0B', tb: '#FAEEDA', text: 'Reto colaborativo de bajo riesgo emocional para construir contexto compartido antes que confianza profunda.' },
     ] },
   { name: 'Storming', sub: 'Estructura antes que armonía', ac: '#993C1D', al: '#FAECE7', ad: '#4A1B0C',
@@ -54,24 +54,24 @@ const ES_STAGES = [
       { ef: 'Estructural', ec: '#0F6E56', tag: 'Sesión de trabajo', tc: '#64B450', tb: '#EBF5E6', text: 'Renegociar acuerdos de trabajo. Muchos conflictos en esta etapa son síntoma de normas que nunca se establecieron.' },
       { ef: 'Reflexivo',   ec: '#534AB7', tag: 'Sesión de trabajo', tc: '#64B450', tb: '#EBF5E6', text: 'Conversación difícil facilitada: sesión estructurada para sacar a la superficie y trabajar un conflicto específico que ha sido evitado.' },
       { ef: 'Estructural', ec: '#0F6E56', tag: 'Sesión de trabajo', tc: '#64B450', tb: '#EBF5E6', text: 'Clarificación de roles y responsabilidades (RACI): muchos conflictos en Storming son síntoma de ambigüedad en quién decide qué.' },
-      { ef: 'Estructural', ec: '#0F6E56', tag: 'Assessment',        tc: '#14A0B4', tb: '#E3F5F8', text: 'DiSC o StrengthsFinder como lente de conflicto: usar los resultados para explicar por qué ciertos estilos chocan y despersonalizar la fricción existente.' },
+      { ef: 'Estructural', ec: '#0F6E56', tag: 'Assessment',        tc: '#14A0B4', tb: '#E3F5F8', text: 'Usar un perfil de estilos como lente de conflicto: entender por qué ciertos perfiles chocan y despersonalizar la fricción existente. Ej: DiSC o StrengthsFinder.' },
       { tag: 'Precaución',                tc: '#993C1D', tb: '#FAECE7', text: 'Evita actividades puramente recreativas ahora: el equipo las vive como distracción del conflicto real.' },
     ] },
   { name: 'Norming', sub: 'Sistemas que sostienen la confianza', ac: '#854F0B', al: '#FEF3E2', ad: '#412402',
     insight: 'Este equipo se está estabilizando. Los avances son reales pero frágiles si no se codifican en normas y rituales explícitos que sobrevivan cambios de personas.',
     recs: [
       { ef: 'Estructural', ec: '#0F6E56', tag: 'Sesión de trabajo', tc: '#64B450', tb: '#EBF5E6', text: 'Taller de normas y rituales: documentar cómo trabajamos, procesos de decisión y protocolos de comunicación.' },
-      { ef: 'Estructural', ec: '#0F6E56', tag: 'Assessment',        tc: '#534AB7', tb: '#E5E3FC', text: 'DiSC o StrengthsFinder colectivo para ver cómo se complementan los estilos y qué fricciones son de personalidad, no de mala fe.' },
+      { ef: 'Estructural', ec: '#0F6E56', tag: 'Assessment',        tc: '#534AB7', tb: '#E5E3FC', text: 'Ver cómo se complementan los estilos del equipo y entender qué fricciones son de personalidad, no de mala fe. Ej: DiSC o StrengthsFinder colectivo.' },
       { ef: 'Vivencial',   ec: '#854F0B', tag: 'Experiencia',       tc: '#854F0B', tb: '#FAEEDA', text: 'Reto de mediana complejidad que refuerce la identidad colectiva: innovación interna, reto social o experiencia con roles cruzados.' },
-      { ef: 'Vivencial',   ec: '#854F0B', tag: 'Experiencia',       tc: '#854F0B', tb: '#FAEEDA', text: 'LEGO Serious Play: construir modelos físicos para hacer visible cómo el equipo se ve a sí mismo, sus acuerdos y su identidad colectiva.' },
+      { ef: 'Vivencial',   ec: '#854F0B', tag: 'Experiencia',       tc: '#854F0B', tb: '#FAEEDA', text: 'Hacer visible cómo el equipo se ve a sí mismo, sus acuerdos y su identidad colectiva a través de construcción física y debrief. Ej: LEGO Serious Play.' },
     ] },
   { name: 'Performing', sub: 'Reto antes que comodidad', ac: '#64B450', al: '#E1F5EE', ad: '#4A8A39',
     insight: 'Este equipo ejecuta bien. El siguiente reto es pasar de rendimiento a seguridad psicológica real: donde el equipo puede decir verdades difíciles sin costo.',
     recs: [
       { ef: 'Reflexivo',   ec: '#534AB7', tag: 'Sesión de trabajo', tc: '#534AB7', tb: '#E5E3FC', text: 'Feedback 360 y retrospectiva profunda: revisar patrones del equipo, no solo resultados de productividad.' },
       { ef: 'Vivencial',   ec: '#854F0B', tag: 'Experiencia',       tc: '#854F0B', tb: '#FAEEDA', text: 'Reto de alta complejidad con debriefing: hackathon, design sprint o simulación de crisis.' },
-      { ef: 'Estructural', ec: '#0F6E56', tag: 'Assessment',        tc: '#14A0B4', tb: '#E3F5F8', text: 'Working Genius (Lencioni) para identificar cómo cada persona contribuye al trabajo colectivo y dónde hay energía desperdiciada.' },
-      { ef: 'Reflexivo',   ec: '#534AB7', tag: 'Experiencia',       tc: '#854F0B', tb: '#FAEEDA', text: 'LEGO Serious Play: mapear modelos mentales del equipo, patrones de colaboración o visión estratégica a través de construcción física y debrief estructurado.' },
+      { ef: 'Estructural', ec: '#0F6E56', tag: 'Assessment',        tc: '#14A0B4', tb: '#E3F5F8', text: 'Identificar cómo cada persona contribuye mejor al trabajo del equipo y dónde se está desperdiciando energía. Ej: Working Genius (Lencioni).' },
+      { ef: 'Reflexivo',   ec: '#534AB7', tag: 'Experiencia',       tc: '#854F0B', tb: '#FAEEDA', text: 'Mapear los modelos mentales del equipo, sus patrones de colaboración y visión estratégica a través de construcción física y debrief. Ej: LEGO Serious Play.' },
     ] },
   { name: 'High Performing', sub: 'Seguridad psicológica como marcador clave', ac: '#14A0B4', al: '#E6F1FB', ad: '#0C7A8A',
     insight: 'Este equipo ha alcanzado confianza y seguridad psicológica reales. El foco ahora es sostenerlo y expandir su impacto hacia otros equipos y la organización.',
@@ -94,7 +94,7 @@ const EN_STAGES = [
     insight: 'This team is in early formation. The priority is not maximum productivity but connection and clarity of shared purpose.',
     recs: [
       { ef: 'Structural',   ec: '#0F6E56', tag: 'Working session', tc: '#64B450', tb: '#EBF5E6', text: 'Team charter workshop: shared purpose, mutual expectations, and working agreements from scratch.' },
-      { ef: 'Structural',   ec: '#0F6E56', tag: 'Assessment',      tc: '#14A0B4', tb: '#E3F5F8', text: 'Ideal moment for DiSC or StrengthsFinder: learn individual styles before patterns that are hard to change form.' },
+      { ef: 'Structural',   ec: '#0F6E56', tag: 'Assessment',      tc: '#14A0B4', tb: '#E3F5F8', text: 'Learn each person\'s individual style before hard-to-change patterns form. E.g: DiSC or StrengthsFinder.' },
       { ef: 'Vivential', ec: '#854F0B', tag: 'Experience',      tc: '#854F0B', tb: '#FAEEDA', text: 'Low emotional-risk collaborative challenge to build shared context before deep trust.' },
     ] },
   { name: 'Storming', sub: 'Structure before harmony', ac: '#993C1D', al: '#FAECE7', ad: '#4A1B0C',
@@ -104,24 +104,24 @@ const EN_STAGES = [
       { ef: 'Structural', ec: '#0F6E56', tag: 'Working session', tc: '#64B450', tb: '#EBF5E6', text: 'Renegotiate working agreements. Many conflicts at this stage are symptoms of norms that were never established.' },
       { ef: 'Reflective',  ec: '#534AB7', tag: 'Working session', tc: '#64B450', tb: '#EBF5E6', text: 'Facilitated difficult conversation: structured session to surface and work through a specific conflict that has been avoided.' },
       { ef: 'Structural',  ec: '#0F6E56', tag: 'Working session', tc: '#64B450', tb: '#EBF5E6', text: 'Role and responsibility clarification (RACI): many Storming conflicts stem from ambiguity in who decides what.' },
-      { ef: 'Structural',  ec: '#0F6E56', tag: 'Assessment',      tc: '#14A0B4', tb: '#E3F5F8', text: 'DiSC or StrengthsFinder — conflict lens: use assessment results to explain why certain styles clash and depersonalize existing friction.' },
+      { ef: 'Structural',  ec: '#0F6E56', tag: 'Assessment',      tc: '#14A0B4', tb: '#E3F5F8', text: 'Use a style profile as a conflict lens: understand why certain profiles clash and depersonalize existing friction. E.g: DiSC or StrengthsFinder.' },
       { tag: 'Caution',                   tc: '#993C1D', tb: '#FAECE7', text: 'Avoid purely recreational activities now: the team experiences them as a distraction from the real conflict.' },
     ] },
   { name: 'Norming', sub: 'Systems that sustain trust', ac: '#854F0B', al: '#FEF3E2', ad: '#412402',
     insight: 'This team is stabilizing. Progress is real but fragile if not codified in explicit norms and rituals that survive changes in people.',
     recs: [
       { ef: 'Structural',   ec: '#0F6E56', tag: 'Working session', tc: '#64B450', tb: '#EBF5E6', text: 'Norms and rituals workshop: document how we work, decision processes, and communication protocols.' },
-      { ef: 'Structural',   ec: '#0F6E56', tag: 'Assessment',      tc: '#534AB7', tb: '#E5E3FC', text: 'Collective DiSC or StrengthsFinder to see how styles complement each other and what frictions are personality, not bad faith.' },
+      { ef: 'Structural',   ec: '#0F6E56', tag: 'Assessment',      tc: '#534AB7', tb: '#E5E3FC', text: 'See how team members\' styles complement each other and understand what frictions are personality-based, not bad faith. E.g: DiSC or StrengthsFinder.' },
       { ef: 'Vivential', ec: '#854F0B', tag: 'Experience',      tc: '#854F0B', tb: '#FAEEDA', text: 'Mid-complexity challenge that reinforces collective identity: internal innovation, social challenge, or cross-role experience.' },
-      { ef: 'Vivential', ec: '#854F0B', tag: 'Experience',      tc: '#854F0B', tb: '#FAEEDA', text: 'LEGO Serious Play: build physical models to make visible how the team sees itself, its agreements, and collective identity.' },
+      { ef: 'Vivential', ec: '#854F0B', tag: 'Experience',      tc: '#854F0B', tb: '#FAEEDA', text: 'Make visible how the team sees itself, its agreements, and collective identity through physical construction and debrief. E.g: LEGO Serious Play.' },
     ] },
   { name: 'Performing', sub: 'Challenge before comfort', ac: '#64B450', al: '#E1F5EE', ad: '#4A8A39',
     insight: 'This team executes well. The next challenge is moving from performance to real psychological safety: where the team can say difficult truths without cost.',
     recs: [
       { ef: 'Reflective',   ec: '#534AB7', tag: 'Working session', tc: '#534AB7', tb: '#E5E3FC', text: '360 feedback and deep retrospective: reviewing team patterns, not just productivity results.' },
       { ef: 'Vivential', ec: '#854F0B', tag: 'Experience',      tc: '#854F0B', tb: '#FAEEDA', text: 'High-complexity challenge with debrief: hackathon, design sprint, or crisis simulation.' },
-      { ef: 'Structural',   ec: '#0F6E56', tag: 'Assessment',      tc: '#14A0B4', tb: '#E3F5F8', text: 'Working Genius (Lencioni) to identify how each person contributes to collective work and where energy is wasted.' },
-      { ef: 'Reflective',   ec: '#534AB7', tag: 'Experience',      tc: '#854F0B', tb: '#FAEEDA', text: 'LEGO Serious Play: map team mental models, collaboration patterns, or strategic vision through physical construction and structured debrief.' },
+      { ef: 'Structural',   ec: '#0F6E56', tag: 'Assessment',      tc: '#14A0B4', tb: '#E3F5F8', text: 'Identify how each person best contributes to the team\'s work and where energy is being wasted. E.g: Working Genius (Lencioni).' },
+      { ef: 'Reflective',   ec: '#534AB7', tag: 'Experience',      tc: '#854F0B', tb: '#FAEEDA', text: 'Map team mental models, collaboration patterns, and strategic vision through physical construction and structured debrief. E.g: LEGO Serious Play.' },
     ] },
   { name: 'High Performing', sub: 'Psychological safety as the key marker', ac: '#14A0B4', al: '#E6F1FB', ad: '#0C7A8A',
     insight: 'This team has achieved real trust and psychological safety. The focus now is sustaining it and expanding its impact to other teams and the organization.',
@@ -378,8 +378,8 @@ exports.handler = async (event) => {
         headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
         body: JSON.stringify({ name: name || null, org: org || null, email: email || null, stage, stage_index: stageIndex, scores, responses: responses || null, prac_responses: pracResponses || null, created_at: new Date().toISOString() }),
       });
-      if (!res.ok) { const t = await res.text(); console.error('Supabase error:', res.status, t); errors.push('Supabase: ' + res.status + ' ' + t); }
-    } catch (err) { errors.push('Supabase: ' + err.message); }
+      if (!res.ok) { const t = await res.text(); console.error('Supabase error:', res.status, t); }
+    } catch (err) { console.error('Supabase:', err.message); }
   }
 
   // 2. Create Notion page (always, internal CenterPoint use — kept in Spanish)
