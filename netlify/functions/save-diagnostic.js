@@ -152,10 +152,11 @@ const UI = {
     emailGreeting: (name) => name ? 'Hola, ' + name : 'Hola',
     emailIntro: 'Gracias por completar el <strong>Diagnóstico de Equipo CenterPoint</strong>. Adjunto encontrarás tu resultado en PDF.',
     emailStageLabel: 'Etapa del equipo',
+    secStages: 'ESPECTRO DE DESARROLLO',
     emailDimsLabel: 'Perfil de dimensiones',
     emailCta: '¿Quieres profundizar en estos resultados? <strong>Conversemos.</strong>',
     emailBtn: 'Agendar conversación',
-    emailModelBtn: 'Acceder al modelo completo',
+    emailModelBtn: 'Conoce el modelo completo',
     notifSubject: (name, stage) => 'Nuevo diagnóstico: ' + (name || 'Anónimo') + ' — ' + stage,
     notifBody: (name, org, email, stage) =>
       '<p>Nuevo diagnóstico completado.</p><ul>' +
@@ -176,10 +177,11 @@ const UI = {
     emailGreeting: (name) => name ? 'Hi, ' + name : 'Hi',
     emailIntro: 'Thank you for completing the <strong>CenterPoint Team Diagnostic</strong>. Your results are attached as a PDF.',
     emailStageLabel: 'Team stage',
+    secStages: 'DEVELOPMENT SPECTRUM',
     emailDimsLabel: 'Dimension profile',
     emailCta: 'Want to go deeper into these results? <strong>Let\'s talk.</strong>',
     emailBtn: 'Schedule a conversation',
-    emailModelBtn: 'Access the full model',
+    emailModelBtn: 'Explore the full model',
     notifSubject: (name, stage) => 'New diagnostic (EN): ' + (name || 'Anonymous') + ' — ' + stage,
     notifBody: (name, org, email, stage) =>
       '<p>New diagnostic completed (English).</p><ul>' +
@@ -261,6 +263,36 @@ function buildPDF({ name, org, stage, stageIndex, scores, gapped, lang }) {
       doc.font('Helvetica-Oblique').fontSize(8.5).fillColor('#374151')
          .text(GAP_INSIGHT, ML + 14, y + 12, { width: CW - 22 });
       y += gH + 14;
+    }
+
+    // STAGE TIMELINE
+    doc.font('Helvetica-Bold').fontSize(9).fillColor('#6B7280').text(u.secStages, ML, y, { width: CW, characterSpacing: 0.5 });
+    y += 8;
+    doc.moveTo(ML, y).lineTo(W - ML, y).lineWidth(0.3).stroke('#E5E7EB');
+    y += 14;
+    {
+      const stageNames = ['Forming','Storming','Norming','Performing','High\nPerforming','Generative'];
+      const stageColors = ['#888780','#993C1D','#854F0B','#64B450','#14A0B4','#534AB7'];
+      const step = CW / (stageNames.length - 1);
+      const tlY = y + 4;
+      // connecting line
+      doc.moveTo(ML, tlY).lineTo(W - ML, tlY).lineWidth(1.5).strokeColor('#CCCCC8').stroke();
+      stageNames.forEach((name, i) => {
+        const x = ML + i * step;
+        const isCur = i === stageIndex;
+        const col = stageColors[i];
+        if (isCur) {
+          doc.circle(x, tlY, 9).lineWidth(1.5).strokeColor(col).stroke();
+          doc.circle(x, tlY, 5).fill(col);
+        } else {
+          doc.circle(x, tlY, 3.5).fill(i < stageIndex ? col : '#CCCCC8');
+        }
+        doc.font(isCur ? 'Helvetica-Bold' : 'Helvetica')
+           .fontSize(isCur ? 7.5 : 6.5)
+           .fillColor(isCur ? col : '#9B9B94')
+           .text(name, x - 28, tlY + 13, { width: 56, align: 'center' });
+      });
+      y += 46;
     }
 
     // DIMENSIONS
@@ -347,7 +379,7 @@ function buildEmailHtml({ name, org, stage, stageIndex, scores, lang }) {
     '<p style="margin:0 0 20px;font-size:13px;color:#6B7280;line-height:1.7">' + u.emailCta + '</p>' +
     '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px">' +
     '<a href="https://calendly.com/connect-centerpointpr/new-meeting" style="display:inline-block;background:#64B450;color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500">' + u.emailBtn + '</a>' +
-    '<a href="https://drive.google.com/file/d/1ADoq_YV69xYbNVpDUpZrq_zkI8EwQq34/view?usp=sharing" style="display:inline-block;background:#fff;color:#282828;text-decoration:none;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;border:1.5px solid #D1D5DB">' + u.emailModelBtn + '</a>' +
+    '<a href="https://centerpointpr.com/growth-hub" style="display:inline-block;background:#fff;color:#282828;text-decoration:none;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;border:1.5px solid #D1D5DB">' + u.emailModelBtn + '</a>' +
     '</div>' +
     '<p style="margin:0;font-size:12px;color:#9CA3AF">O escríbenos a <a href="mailto:connect@centerpointpr.com" style="color:#6B7280">connect@centerpointpr.com</a></p>' +
     '</div><div style="background:#F9FAFB;border-top:1px solid #E5E7EB;padding:16px 28px;text-align:center">' +

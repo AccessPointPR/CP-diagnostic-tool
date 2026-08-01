@@ -326,6 +326,40 @@ function setLang(l){
 
 let cur=-1, ans=[], pracAns=[], userName='', companyName='', teamName='', showingResults=false;
 
+function stageMapSVG(si){
+  const dots=[
+    {cx:55, cy:96, label:'Forming',        color:'#888780'},
+    {cx:148,cy:170,label:'Storming',       color:'#993C1D'},
+    {cx:280,cy:112,label:'Norming',        color:'#854F0B'},
+    {cx:480,cy:68, label:'Performing',     color:'#64B450'},
+    {cx:538,cy:44, label:'High Performing',color:'#14A0B4'},
+    {cx:638,cy:32, label:'Generative',     color:'#534AB7'},
+  ];
+  const cur=dots[si];
+  return `<svg width="100%" viewBox="0 0 714 286" role="img" xmlns="http://www.w3.org/2000/svg" style="display:block;border-radius:8px">
+  <rect x="0" y="0" width="714" height="286" fill="#F4F4F2" rx="6"/>
+  <text x="20" y="26" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="#6B6B65" letter-spacing="0.18em">TEAM DEVELOPMENT SPECTRUM</text>
+  <g transform="translate(20,44)">
+    <line x1="44" y1="30" x2="44" y2="198" stroke="#CCCCC8" stroke-width="1"/>
+    <line x1="44" y1="198" x2="668" y2="198" stroke="#CCCCC8" stroke-width="1"/>
+    <text x="18" y="115" font-family="system-ui,sans-serif" font-size="8" font-weight="600" fill="#9B9B94" text-anchor="middle" transform="rotate(-90 18 115)" letter-spacing="0.1em">EFFECTIVENESS</text>
+    <text x="356" y="218" font-family="system-ui,sans-serif" font-size="8" font-weight="600" fill="#9B9B94" text-anchor="middle" letter-spacing="0.1em">DEVELOPMENT OVER TIME</text>
+    <rect x="45" y="31" width="468" height="166" fill="#FFFFFF" opacity="0.7"/>
+    <rect x="513" y="31" width="154" height="166" fill="#64B45010"/>
+    <text x="279" y="18" font-family="system-ui,sans-serif" font-size="7.5" font-weight="700" fill="#9B9B94" text-anchor="middle" letter-spacing="0.1em">TUCKMAN (1965)</text>
+    <text x="530" y="18" font-family="system-ui,sans-serif" font-size="7.5" font-weight="700" fill="#14A0B4" text-anchor="middle" letter-spacing="0.1em">KATZENBACH &amp; SMITH</text>
+    <text x="626" y="18" font-family="system-ui,sans-serif" font-size="7.5" font-weight="700" fill="#6B6B65" text-anchor="middle" letter-spacing="0.1em">LONDON</text>
+    <path d="M 55 96 C 90 96, 110 164, 148 170 C 188 176, 228 136, 280 112 C 330 92, 390 76, 480 68" fill="none" stroke="#64B450" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 480 68 C 500 62, 518 52, 538 44" fill="none" stroke="#14A0B4" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 538 44 C 568 38, 600 34, 638 32" fill="none" stroke="#6B6B65" stroke-width="2.5" stroke-linecap="round"/>
+    ${dots.map((d,i)=>`<circle cx="${d.cx}" cy="${d.cy}" r="${i===si?8:4}" fill="${d.color}" opacity="${i===si?1:0.55}"/>`).join('')}
+    <circle cx="${cur.cx}" cy="${cur.cy}" r="14" fill="none" stroke="${cur.color}" stroke-width="2" opacity="0.4"/>
+    ${dots.map((d,i)=>`<text x="${d.cx}" y="${d.cy+(i===1?16:i===0?16:-12)}" font-family="system-ui,sans-serif" font-size="${i===si?9.5:8}" font-weight="${i===si?700:500}" fill="${i===si?d.color:'#6B6B65'}" text-anchor="middle">${d.label}</text>`).join('')}
+    <text x="${cur.cx}" y="${cur.cy+(si===1?32:si===0?32:-26)}" font-family="system-ui,sans-serif" font-size="8" font-weight="700" fill="${cur.color}" text-anchor="middle">← tu equipo</text>
+    <text x="0" y="236" font-family="system-ui,sans-serif" font-size="7" fill="#9B9B94">Integrates Tuckman (1965), Katzenbach &amp; Smith (1993), and London (2012)</text>
+  </g></svg>`;
+}
+
 function scores(){
   const s={trust:0,conflict:0,clarity:0,cohesion:0,psafety:0,impact:0};
   const c={trust:0,conflict:0,clarity:0,cohesion:0,psafety:0,impact:0};
@@ -597,6 +631,7 @@ function renderResultados(){
       <div class="res-insight">${st.insight}</div>
       ${gapped?`<div class="res-gap">${GAP_INSIGHT}</div>`:''}
     </div>
+    <div style="margin-bottom:16px;border-radius:8px;overflow:hidden">${stageMapSVG(si)}</div>
     <div class="card">
       <div class="card-title">${U.cardDims}</div>
       ${Object.entries(s).map(([k,v])=>{const d=DIMS[k];return`<div class="dim-row">
