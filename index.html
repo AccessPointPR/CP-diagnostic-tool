@@ -354,8 +354,8 @@ function stageMapSVG(si){
     <path d="M 538 44 C 568 38, 600 34, 638 32" fill="none" stroke="#6B6B65" stroke-width="2.5" stroke-linecap="round"/>
     ${dots.map((d,i)=>`<circle cx="${d.cx}" cy="${d.cy}" r="${i===si?8:4}" fill="${d.color}" opacity="${i===si?1:0.55}"/>`).join('')}
     <circle cx="${cur.cx}" cy="${cur.cy}" r="14" fill="none" stroke="${cur.color}" stroke-width="2" opacity="0.4"/>
-    ${dots.map((d,i)=>`<text x="${d.cx}" y="${d.cy+(i===1?16:i===0?16:-12)}" font-family="system-ui,sans-serif" font-size="${i===si?9.5:8}" font-weight="${i===si?700:500}" fill="${i===si?d.color:'#6B6B65'}" text-anchor="middle">${d.label}</text>`).join('')}
-    <text x="${cur.cx}" y="${cur.cy+(si===1?32:si===0?32:-26)}" font-family="system-ui,sans-serif" font-size="8" font-weight="700" fill="${cur.color}" text-anchor="middle">← tu equipo</text>
+    ${dots.map((d,i)=>`<text x="${d.cx}" y="${d.cy+17}" font-family="system-ui,sans-serif" font-size="${i===si?11:9}" font-weight="${i===si?700:500}" fill="${i===si?d.color:'#6B6B65'}" text-anchor="middle">${d.label}</text>`).join('')}
+    <text x="${cur.cx}" y="${cur.cy+31}" font-family="system-ui,sans-serif" font-size="8.5" font-weight="700" fill="${cur.color}" text-anchor="middle">← tu equipo</text>
     <text x="0" y="236" font-family="system-ui,sans-serif" font-size="7" fill="#9B9B94">Integrates Tuckman (1965), Katzenbach &amp; Smith (1993), and London (2012)</text>
   </g></svg>`;
 }
